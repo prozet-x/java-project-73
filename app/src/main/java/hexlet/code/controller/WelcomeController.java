@@ -10,6 +10,7 @@ public class WelcomeController {
 
     @GetMapping("welcome")
     public String welcome() {
+        System.out.println("WTF");
         return "Welcome to Spring";
     }
 }

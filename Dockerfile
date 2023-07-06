@@ -8,4 +8,4 @@ RUN gradle installDist
 
 CMD ./build/install/app/bin/app
 
-EXPOSE 80
+EXPOSE 8080

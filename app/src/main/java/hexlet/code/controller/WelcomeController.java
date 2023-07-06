@@ -11,7 +11,7 @@ public class WelcomeController {
     public String root() {
         return "HI THERE!";
     }
-    
+
     @GetMapping("welcome")
     public String welcome() {
         System.out.println("WTF");

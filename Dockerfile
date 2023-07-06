@@ -8,4 +8,4 @@ RUN gradle installDist
 
 CMD ./build/install/app/bin/app
 
-EXPOSE 5000
+EXPOSE 80

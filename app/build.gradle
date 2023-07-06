@@ -30,6 +30,16 @@ repositories {
 	maven { url 'https://repo.spring.io/snapshot' }
 }
 
+jar {
+    manifest {
+        attributes "Main-Class": "hexlet.code.App"
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'

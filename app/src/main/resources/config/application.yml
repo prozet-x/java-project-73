@@ -3,6 +3,6 @@ server:
 
 base-url: /
 
-#spring:
-#  application:
-#    name: Application
+spring:
+  application:
+    name: TaskTracker

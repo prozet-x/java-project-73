@@ -1,0 +1,16 @@
+server:
+  error:
+    include-stacktrace:
+
+spring:
+  datasource:
+    username: sa
+    password: sa
+    hikari:
+      jdbc-url: "jdbc:h2:./taskDB"
+  h2:
+    console:
+      enabled: true
+      path: /h2console/
+      settings:
+        web-allow-others: true

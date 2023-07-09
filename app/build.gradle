@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id "org.liquibase.gradle" version "2.2.0"
 	id 'org.springframework.boot' version '3.1.2-SNAPSHOT'
 	id 'io.spring.dependency-management' version '1.1.0'
 	id 'application'
@@ -41,10 +42,23 @@ jar {
 }
 
 dependencies {
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	compileOnly 'org.projectlombok:lombok'
+
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.1.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	liquibaseRuntime(
+			sourceSets.main.output,
+			'org.liquibase:liquibase-core',
+			'info.picocli:picocli:4.7.1',
+			'org.liquibase.ext:liquibase-hibernate6:4.21.1',
+			'org.springframework.boot:spring-boot-starter-data-jpa',
+			'com.h2database:h2',
+	)
 }
 
 tasks.named('test') {

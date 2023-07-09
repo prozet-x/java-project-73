@@ -1,16 +1,16 @@
 server:
   error:
-    include-stacktrace:
+    include-stacktrace: never
 
 spring:
+  devtools:
+    livereload:
+      enabled: false
+    restart:
+      enabled: false
+  jpa:
+    show-sql: false
   datasource:
-    username: sa
-    password: sa
-    hikari:
-      jdbc-url: "jdbc:h2:./taskDB"
-  h2:
-    console:
-      enabled: true
-      path: /h2console/
-      settings:
-        web-allow-others: true
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+    url: ${DATABASE_URL}

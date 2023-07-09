@@ -65,5 +65,9 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+diffChangelog{
+	dependsOn compileJava
+}
+
 task stage(dependsOn: [clean, installDist])
 installDist.mustRunAfter clean

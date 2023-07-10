@@ -1,13 +1,12 @@
-#server:
-#  error:
-#    include-stacktrace: on_param
+server:
+  error:
+    include-stacktrace: on_param
 
 spring:
   datasource:
-    username: sa
-    password: sa
-    hikari:
-      jdbc-url: "jdbc:h2:./taskDB"
+    username: ""
+    password: ""
+    url: "jdbc:h2:./taskDB"
   h2:
     console:
       enabled: true

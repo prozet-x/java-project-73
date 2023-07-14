@@ -35,4 +35,7 @@ public class UserController {
     public User registerNew(@RequestBody @Valid final UserDto userDto) {
         return userService.createNew(userDto);
     }
+
+    @DeleteMapping(ID)
+    public
 }

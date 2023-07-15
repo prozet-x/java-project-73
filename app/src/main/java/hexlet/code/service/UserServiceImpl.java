@@ -24,4 +24,14 @@ public class UserServiceImpl implements UserService{
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userRepository.save(newUser);
     }
+
+    @Override
+    public User update(final UserDto userDto, final Long id) {
+        final User user = userRepository.findById(id).get();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        return userRepository.save(user);
+    }
 }

@@ -20,6 +20,8 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
 
+    private static final String ONLY_OWNER_BY_ID = "@userRepository.findById(#id).get().getEmail() = authentication.getName()";
+
     @GetMapping
     public List<User> getAll() {
         return userRepository.findAll();
@@ -36,6 +38,14 @@ public class UserController {
         return userService.createNew(userDto);
     }
 
+    @PutMapping(ID)
+    public User update(@RequestBody @Valid UserDto userDto, @PathVariable Long id) {
+        return userRepository.findById(id).get();
+
+    }
+
     @DeleteMapping(ID)
-    public
+    public void delete(@PathVariable final Long id) {
+        userRepository.deleteById(id);
+    }
 }

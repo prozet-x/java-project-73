@@ -4,6 +4,6 @@ import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
 
 public interface UserService {
-    User createNew(UserDto userDto);
-    User update(UserDto userDto, Long id);
+    User createNew(User user);
+    User update(User user, Long id);
 }

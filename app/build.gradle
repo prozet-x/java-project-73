@@ -58,7 +58,8 @@ dependencies {
 			'org.springdoc:springdoc-openapi-ui:1.7.0',
 			'org.liquibase:liquibase-core',
 			'com.querydsl:querydsl-jpa:5.0.0:jakarta',
-			'com.rollbar:rollbar-spring-boot-webmvc:1.10.0'
+			'com.rollbar:rollbar-spring-boot-webmvc:1.10.0',
+			'org.modelmapper:modelmapper:2.1.1'
 	)
 
 

@@ -16,22 +16,33 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     @Override
-    public User createNew(UserDto userDto) {
-        final User newUser = new User();
-        newUser.setEmail(userDto.getEmail());
-        newUser.setFirstName(userDto.getFirstName());
-        newUser.setLastName(userDto.getLastName());
-        newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        return userRepository.save(newUser);
+    public User createNew(User user) {
+//        final User newUser = new User();
+//        newUser.setEmail(userDto.getEmail());
+//        newUser.setFirstName(userDto.getFirstName());
+//        newUser.setLastName(userDto.getLastName());
+//        newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
+//    @Override
+//    public User createNew(UserDto userDto) {
+//        final User newUser = new User();
+//        newUser.setEmail(userDto.getEmail());
+//        newUser.setFirstName(userDto.getFirstName());
+//        newUser.setLastName(userDto.getLastName());
+//        newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+//        return userRepository.save(newUser);
+//    }
+
     @Override
-    public User update(final UserDto userDto, final Long id) {
+    public User update(final User userUpdated, final Long id) {
         final User user = userRepository.findById(id).get();
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setFirstName(userUpdated.getFirstName());
+        user.setLastName(userUpdated.getLastName());
+        user.setEmail(userUpdated.getEmail());
+        user.setPassword(passwordEncoder.encode(userUpdated.getPassword()));
         return userRepository.save(user);
     }
 }

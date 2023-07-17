@@ -6,13 +6,14 @@ import hexlet.code.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 //import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
 @AllArgsConstructor
 public class UserServiceImpl implements UserService{
-    //private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
     @Override
@@ -21,8 +22,7 @@ public class UserServiceImpl implements UserService{
         newUser.setEmail(userDto.getEmail());
         newUser.setFirstName(userDto.getFirstName());
         newUser.setLastName(userDto.getLastName());
-        //newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        newUser.setPassword(userDto.getPassword());
+        newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userRepository.save(newUser);
     }
 
@@ -32,8 +32,7 @@ public class UserServiceImpl implements UserService{
         user.setFirstName(userUpdated.getFirstName());
         user.setLastName(userUpdated.getLastName());
         user.setEmail(userUpdated.getEmail());
-        //user.setPassword(passwordEncoder.encode(userUpdated.getPassword()));
-        user.setPassword(userUpdated.getPassword());
+        user.setPassword(passwordEncoder.encode(userUpdated.getPassword()));
         return userRepository.save(user);
     }
 }

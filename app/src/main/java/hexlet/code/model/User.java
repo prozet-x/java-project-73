@@ -1,5 +1,6 @@
 package hexlet.code.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -40,6 +41,7 @@ public class User {
     private String email;
 
     @Size(min = 3)
+    @JsonIgnore
     private String password;
 
     @CreationTimestamp

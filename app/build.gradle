@@ -59,9 +59,11 @@ dependencies {
 			'org.liquibase:liquibase-core',
 			'com.querydsl:querydsl-jpa:5.0.0:jakarta',
 			'com.rollbar:rollbar-spring-boot-webmvc:1.10.0',
-//			'org.modelmapper:modelmapper:2.1.1'
 	)
 
+	testImplementation(
+			'org.springframework.boot:spring-boot-starter-test'
+	)
 
 	annotationProcessor(
 			'org.projectlombok:lombok',

@@ -1,5 +1,6 @@
 package hexlet.code.service;
 
+import hexlet.code.NoSuchUserException;
 import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
@@ -34,5 +35,13 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userUpdated.getEmail());
         user.setPassword(passwordEncoder.encode(userUpdated.getPassword()));
         return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new NoSuchUserException(String.format("User with id %d not found", id));
+        }
+        userRepository.deleteById(id);
     }
 }

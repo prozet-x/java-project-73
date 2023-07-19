@@ -1,7 +1,10 @@
 package hexlet.code;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.TypeRef;
 import hexlet.code.dto.UserDto;
+import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,13 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -55,6 +61,7 @@ class ApplicationTests {
     public void testInit() {
         assertTrue(true);
     }
+
     @Test
     void testCreateUserGood() throws Exception {
         assertEquals(userRepository.count(), 0);
@@ -87,5 +94,32 @@ class ApplicationTests {
         Long id = userRepository.findByEmail("def@email.com").getId();
         mockMvc.perform(delete(String.format("/api/users/%d", id))).andExpect(status().isOk());
         assertEquals(userRepository.count(), 0);
+    }
+
+    @Test
+    void testDeleteUserBad() throws Exception {
+        mockMvc.perform(delete("/api/users/1")).andExpect(status().isNotFound());
+        assertEquals(userRepository.count(), 0);
+    }
+
+    @Test
+    void testGetUserGood() throws Exception {
+        addDefaultUser();
+        addUser(new UserDto("fn", "ln", "e@mail.com", "pwd"));
+
+        User expectedUser = userRepository.findById(1L).get();
+
+        mockMvc.perform(get("/api/users/1")).andExpect(status().isOk());
+        MockHttpServletResponse response = mockMvc.perform(get("/api/users/2"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        User user = mapper.readValue(response.getContentAsString(), new TypeReference<>() {
+        });
+
+        assertEquals(expectedUser.getId(), user.getId());
+        assertEquals(expectedUser.getEmail(), user.getEmail());
+        assertEquals(expectedUser.getFirstName(), user.getFirstName());
+        assertEquals(expectedUser.getLastName(), user.getLastName());
     }
 }

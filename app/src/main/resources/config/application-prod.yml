@@ -13,7 +13,7 @@ spring:
   datasource:
     usernam: ${PGUSER}
     password: ${PGPASSWORD}
-    url: "jdbc:" + ${DATABASE_URL}
+    url: ${DATABASE_URL}
 #    username: ""
 #    password: ""
 #    url: "jdbc:h2:./taskDB"s

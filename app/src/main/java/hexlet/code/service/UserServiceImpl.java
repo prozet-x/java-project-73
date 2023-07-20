@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 @Transactional
 @AllArgsConstructor
@@ -40,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteById(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new NoSuchUserException(String.format("User with id %d not found", id));
+            throw new NoSuchElementException(String.format("User with id %d not found", id));
         }
         userRepository.deleteById(id);
     }

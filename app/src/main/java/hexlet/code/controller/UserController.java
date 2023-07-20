@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("${base-url}" + "/users")
 public class UserController {
-    private static final String ID = "/{id}";
+    public static final String ID = "/{id}";
     private final UserRepository userRepository;
     private final UserService userService;
 

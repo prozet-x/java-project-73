@@ -15,18 +15,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
 import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -148,7 +146,21 @@ class ApplicationTests {
     }
 
     @Test
-    void testUpdateUserGood() {
+    void testUpdateUser() throws Exception {
+        addDefaultUser();
+        UserDto userDto = new UserDto("newFN", "newLN", "new@EMAIL.com", "newPWD");
+        User oldUser = userRepository.findAll().get(0);
 
+        MockHttpServletRequestBuilder creationReq = put("/api/users/{id}", oldUser.getId())
+                .content(mapper.writeValueAsString(userDto))
+                .contentType(MediaType.APPLICATION_JSON);
+        mockMvc.perform(creationReq)
+                .andExpect(status().isOk());
+
+        User updatedUser = userRepository.findById(oldUser.getId()).get();
+
+        assertEquals(updatedUser.getEmail(), userDto.getEmail());
+        assertEquals(updatedUser.getFirstName(), userDto.getFirstName());
+        assertEquals(updatedUser.getLastName(), userDto.getLastName());
     }
 }

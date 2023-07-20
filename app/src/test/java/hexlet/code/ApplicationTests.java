@@ -18,6 +18,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -107,10 +111,9 @@ class ApplicationTests {
         addDefaultUser();
         addUser(new UserDto("fn", "ln", "e@mail.com", "pwd"));
 
-        User expectedUser = userRepository.findById(1L).get();
+        User expectedUser = userRepository.findAll().get(1);
 
-        mockMvc.perform(get("/api/users/1")).andExpect(status().isOk());
-        MockHttpServletResponse response = mockMvc.perform(get("/api/users/2"))
+        MockHttpServletResponse response = mockMvc.perform(get("/api/users/{id}", expectedUser.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -121,5 +124,31 @@ class ApplicationTests {
         assertEquals(expectedUser.getEmail(), user.getEmail());
         assertEquals(expectedUser.getFirstName(), user.getFirstName());
         assertEquals(expectedUser.getLastName(), user.getLastName());
+    }
+
+    @Test
+    void testGetUserBad() throws Exception {
+        addDefaultUser();
+        mockMvc.perform(get("/api/users/0"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testGEtAllUsers() throws Exception {
+        addDefaultUser();
+        addUser(new UserDto("fn", "ln", "e@mail.com", "pwd"));
+
+        MockHttpServletResponse resp = mockMvc.perform(get("/api/users"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+
+        List<User> users = mapper.readValue(resp.getContentAsString(), new TypeReference<>(){});
+        assertThat(users).hasSize(2);
+    }
+
+    @Test
+    void testUpdateUserGood() {
+
     }
 }

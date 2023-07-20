@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -24,8 +25,8 @@ public class BaseExceptionHandler {
     }
 
     @ResponseStatus(NOT_FOUND)
-    @ExceptionHandler(NoSuchUserException.class)
-    public String validationExceptionHandler(NoSuchUserException ex) {
+    @ExceptionHandler({NoSuchUserException.class, NoSuchElementException.class})
+    public String validationExceptionHandler(Exception ex) {
         return ex.getMessage();
     }
 }

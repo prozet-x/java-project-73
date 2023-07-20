@@ -11,9 +11,9 @@ spring:
   jpa:
     show-sql: false
   datasource:
-#    username: ${PGUSER}
-#    password: ${PGPASSWORD}
-#    url: ${DATABASE_URL}
-    username: ""
-    password: ""
-    url: "jdbc:h2:./taskDB"
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+    url: ${DATABASE_URL}
+#    username: ""
+#    password: ""
+#    url: "jdbc:h2:./taskDB"

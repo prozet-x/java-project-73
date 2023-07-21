@@ -1,14 +1,14 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.TypeRef;
-import hexlet.code.dto.UserDto;
-import hexlet.code.model.User;
-import hexlet.code.repository.UserRepository;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.dto.UserDto;
+import hexlet.code.model.User;
+import hexlet.code.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +17,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,10 +37,13 @@ class ApplicationTests {
 
     private static ObjectMapper mapper;
 
+    private static final String USERS_URL = "/api/users";
+    private static final String ID_PATH_VAR = "/{id}";
+
     private UserDto defaultUser = new UserDto("defFirstName", "defLastName", "def@email.com", "defPassword");
 
     private ResultActions addUser(UserDto userDto) throws Exception {
-        MockHttpServletRequestBuilder creationReq = post("/api/users").content(mapper.writeValueAsString(userDto)).contentType(MediaType.APPLICATION_JSON);
+        MockHttpServletRequestBuilder creationReq = post(USERS_URL).content(mapper.writeValueAsString(userDto)).contentType(MediaType.APPLICATION_JSON);
         return mockMvc.perform(creationReq);
     }
 
@@ -94,13 +96,13 @@ class ApplicationTests {
     void testDeleteUserGood() throws Exception {
         addDefaultUser();
         Long id = userRepository.findByEmail("def@email.com").getId();
-        mockMvc.perform(delete(String.format("/api/users/%d", id))).andExpect(status().isOk());
+        mockMvc.perform(delete(USERS_URL + "/" + id)).andExpect(status().isOk());
         assertEquals(userRepository.count(), 0);
     }
 
     @Test
     void testDeleteUserBad() throws Exception {
-        mockMvc.perform(delete("/api/users/1")).andExpect(status().isNotFound());
+        mockMvc.perform(delete(USERS_URL + "/999")).andExpect(status().isNotFound());
         assertEquals(userRepository.count(), 0);
     }
 
@@ -111,7 +113,7 @@ class ApplicationTests {
 
         User expectedUser = userRepository.findAll().get(1);
 
-        MockHttpServletResponse response = mockMvc.perform(get("/api/users/{id}", expectedUser.getId()))
+        MockHttpServletResponse response = mockMvc.perform(get(USERS_URL + ID_PATH_VAR, expectedUser.getId()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -127,7 +129,7 @@ class ApplicationTests {
     @Test
     void testGetUserBad() throws Exception {
         addDefaultUser();
-        mockMvc.perform(get("/api/users/0"))
+        mockMvc.perform(get(USERS_URL + "/0"))
                 .andExpect(status().isNotFound());
     }
 
@@ -136,7 +138,7 @@ class ApplicationTests {
         addDefaultUser();
         addUser(new UserDto("fn", "ln", "e@mail.com", "pwd"));
 
-        MockHttpServletResponse resp = mockMvc.perform(get("/api/users"))
+        MockHttpServletResponse resp = mockMvc.perform(get(USERS_URL))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -151,7 +153,7 @@ class ApplicationTests {
         UserDto userDto = new UserDto("newFN", "newLN", "new@EMAIL.com", "newPWD");
         User oldUser = userRepository.findAll().get(0);
 
-        MockHttpServletRequestBuilder creationReq = put("/api/users/{id}", oldUser.getId())
+        MockHttpServletRequestBuilder creationReq = put(USERS_URL + ID_PATH_VAR, oldUser.getId())
                 .content(mapper.writeValueAsString(userDto))
                 .contentType(MediaType.APPLICATION_JSON);
         mockMvc.perform(creationReq)

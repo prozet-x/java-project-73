@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 //@EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .anyRequest().permitAll()
                 .and().csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());

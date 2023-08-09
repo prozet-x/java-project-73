@@ -95,7 +95,7 @@ class ApplicationTests {
     @Test
     void testDeleteUserGood() throws Exception {
         addDefaultUser();
-        Long id = userRepository.findByEmail("def@email.com").getId();
+        Long id = userRepository.findByEmail("def@email.com").get().getId();
         mockMvc.perform(delete(USERS_URL + "/" + id)).andExpect(status().isOk());
         assertEquals(userRepository.count(), 0);
     }

@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,12 @@ public class BaseExceptionHandler {
     @ResponseStatus(NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
     public String validationExceptionHandler(NoSuchElementException ex) {
+        return ex.getMessage();
+    }
+
+    @ResponseStatus(UNAUTHORIZED)
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public String UsernameNotFoundExceptionHandler(UsernameNotFoundException ex) {
         return ex.getMessage();
     }
 }

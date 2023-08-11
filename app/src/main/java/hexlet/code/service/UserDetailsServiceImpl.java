@@ -12,7 +12,7 @@ import static hexlet.code.config.security.SecurityConfig.DEFAULT_AUTHORITIES;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

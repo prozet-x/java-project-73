@@ -8,6 +8,7 @@ import hexlet.code.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.CREATED;
 import java.util.List;
@@ -42,11 +43,13 @@ public class UserController {
         return userService.createNew(userDto);
     }
 
+    @PreAuthorize(ONLY_OWNER_BY_ID)
     @PutMapping(ID)
     public User update(@RequestBody @Valid UserDto userDto, @PathVariable Long id) {
         return userService.update(userDto, id);
     }
 
+    @PreAuthorize(ONLY_OWNER_BY_ID)
     @DeleteMapping(ID)
     public void delete(@PathVariable final Long id) {
         userService.deleteById(id);

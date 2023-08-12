@@ -5,20 +5,17 @@ import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.CREATED;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
+import static hexlet.code.controller.UserController.USER_CONTROLLER_PATH;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("${base-url}" + "/users")
+@RequestMapping("${base-url}" + USER_CONTROLLER_PATH)
 public class UserController {
     public static final String USER_CONTROLLER_PATH = "/users";
     public static final String ID = "/{id}";

@@ -24,8 +24,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final JWTHelper jwtHelper;
 
-
-
     public JWTAuthenticationFilter(final AuthenticationManager authenticationManager,
                                    final RequestMatcher loginRequest,
                                    final JWTHelper jwtHelper) {

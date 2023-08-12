@@ -18,7 +18,7 @@ import static hexlet.code.controller.UserController.USER_CONTROLLER_PATH;
 @RequestMapping("${base-url}" + USER_CONTROLLER_PATH)
 public class UserController {
     public static final String USER_CONTROLLER_PATH = "/users";
-    public static final String ID = "/{id}";
+    private static final String ID = "/{id}";
     private final UserRepository userRepository;
     private final UserService userService;
 
@@ -42,7 +42,7 @@ public class UserController {
 
     @PreAuthorize(ONLY_OWNER_BY_ID)
     @PutMapping(ID)
-    public User update(@RequestBody @Valid UserDto userDto, @PathVariable Long id) {
+    public User update(@RequestBody @Valid UserDto userDto, @PathVariable final Long id) {
         return userService.update(userDto, id);
     }
 

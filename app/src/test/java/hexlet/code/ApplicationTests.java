@@ -1,6 +1,9 @@
 package hexlet.code;
 
 import java.util.List;
+import java.util.Map;
+
+import hexlet.code.config.SpringConfigForIT;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -10,25 +13,36 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.*;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import hexlet.code.component.JWTHelper;
+
+import static hexlet.code.config.SpringConfigForIT.TEST_PROFILE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+
 @AutoConfigureMockMvc
+@ActiveProfiles(TEST_PROFILE)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringConfigForIT.class)
 class ApplicationTests {
     @Autowired
     private MockMvc mockMvc;
@@ -38,7 +52,9 @@ class ApplicationTests {
 
     private static ObjectMapper mapper;
 
-    private static final String USERS_URL = "/api/users";
+    @Autowired
+    private JWTHelper jwtHelper;
+    private static final String USERS_URL = "/users";
     private static final String ID_PATH_VAR = "/{id}";
 
     private UserDto defaultUser = new UserDto("defFirstName", "defLastName", "def@email.com", "defPassword");
@@ -97,7 +113,9 @@ class ApplicationTests {
     void testDeleteUserGood() throws Exception {
         addDefaultUser();
         Long id = userRepository.findByEmail("def@email.com").get().getId();
-        mockMvc.perform(delete(USERS_URL + "/" + id)).andExpect(status().isOk());
+        final MockHttpServletRequestBuilder requestBuilder = delete(USERS_URL + "/" + id)
+                .header("Authorization", jwtHelper.expiring(Map.of("username", "def@email.com")));
+        mockMvc.perform(requestBuilder).andExpect(status().isOk());
         assertEquals(userRepository.count(), 0);
     }
 

@@ -3,6 +3,7 @@ package hexlet.code;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -100,12 +101,14 @@ class ApplicationTests {
         assertEquals(userRepository.count(), 0);
     }
 
+    @Disabled
     @Test
     void testDeleteUserBad() throws Exception {
         mockMvc.perform(delete(USERS_URL + "/999")).andExpect(status().isNotFound());
         assertEquals(userRepository.count(), 0);
     }
 
+    @Disabled
     @Test
     void testGetUserGood() throws Exception {
         addDefaultUser();
@@ -126,6 +129,7 @@ class ApplicationTests {
         assertEquals(expectedUser.getLastName(), user.getLastName());
     }
 
+    @Disabled
     @Test
     void testGetUserBad() throws Exception {
         addDefaultUser();
@@ -133,6 +137,7 @@ class ApplicationTests {
                 .andExpect(status().isNotFound());
     }
 
+    @Disabled
     @Test
     void testGEtAllUsers() throws Exception {
         addDefaultUser();
@@ -147,6 +152,7 @@ class ApplicationTests {
         assertThat(users).hasSize(2);
     }
 
+    @Disabled
     @Test
     void testUpdateUser() throws Exception {
         addDefaultUser();

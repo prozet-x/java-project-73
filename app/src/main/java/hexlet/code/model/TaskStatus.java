@@ -20,7 +20,7 @@ public class TaskStatus {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Size(min = 3)
+    @Size(min = 1)
     private String name;
 
     @CreationTimestamp

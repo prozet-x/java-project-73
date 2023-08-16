@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import hexlet.code.config.SpringConfigForIT;
 import hexlet.code.dto.LoginDto;
+import hexlet.code.dto.TaskStatusDto;
+import hexlet.code.model.TaskStatus;
+import hexlet.code.repository.TaskStatusRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -31,6 +34,7 @@ import hexlet.code.component.JWTHelper;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static hexlet.code.config.SpringConfigForIT.TEST_PROFILE;
+import static hexlet.code.controller.TaskStatusController.STATUS_CONTROLLER_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -53,6 +57,9 @@ class ApplicationTests {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TaskStatusRepository taskStatusRepository;
+
     private static ObjectMapper mapper;
 
     @Autowired
@@ -64,6 +71,8 @@ class ApplicationTests {
 
     private UserDto defaultUser1 = new UserDto("defFirstName1", "defLastName1", "def1@email.com", "defPassword1");
     private UserDto defaultUser2 = new UserDto("defFirstName2", "defLastName2", "def2@email.com", "defPassword2");
+    private TaskStatusDto defaultTaskStatus1 = new TaskStatusDto("status1");
+    private TaskStatusDto defaultTaskStatus2 = new TaskStatusDto("status2");
 
     private ResultActions addUser(UserDto userDto) throws Exception {
         String userDtoAsJSONString = mapper.writeValueAsString(userDto);
@@ -75,6 +84,16 @@ class ApplicationTests {
         return performWithoutToken(creationReq);
     }
 
+    private ResultActions addTaskStatusUnderUser(TaskStatusDto taskStatusDto, String userName) throws Exception {
+        String taskStatusDtoAsJSONString = mapper.writeValueAsString(taskStatusDto);
+
+        MockHttpServletRequestBuilder creationReq = post(STATUS_CONTROLLER_PATH)
+                .content(taskStatusDtoAsJSONString)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        return performWithToken(creationReq, userName);
+    }
+
     @BeforeAll
     static void beforeAll() {
         mapper = new ObjectMapper();
@@ -83,6 +102,7 @@ class ApplicationTests {
     @AfterEach
     void afterEach() {
         userRepository.deleteAll();
+        taskStatusRepository.deleteAll();
     }
 
     @Test
@@ -200,6 +220,99 @@ class ApplicationTests {
         assertEquals(updatedUser.getEmail(), userDto.getEmail());
         assertEquals(updatedUser.getFirstName(), userDto.getFirstName());
         assertEquals(updatedUser.getLastName(), userDto.getLastName());
+    }
+
+    @Test
+    void testTaskStatusCreate() throws Exception {
+        addUser(defaultUser1);
+        assertEquals(taskStatusRepository.count(), 0);
+
+        MockHttpServletRequestBuilder req = post(STATUS_CONTROLLER_PATH)
+                .content(mapper.writeValueAsString(defaultTaskStatus1))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        performWithoutToken(req).andExpect(status().isForbidden());
+        assertEquals(taskStatusRepository.count(), 0);
+
+        performWithToken(req, defaultUser1.getEmail()).andExpect(status().isOk());
+        assertEquals(taskStatusRepository.count(), 1);
+
+        String nameOfSavedStatus = taskStatusRepository.findAll().get(0).getName();
+        assertEquals(nameOfSavedStatus, defaultTaskStatus1.getName());
+    }
+
+    @Test
+    void testTaskStatusDelete() throws Exception {
+        addUser(defaultUser1);
+        addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+        assertEquals(taskStatusRepository.count(), 1);
+
+        Long id = taskStatusRepository.findAll().get(0).getId();
+        MockHttpServletRequestBuilder reqDel = delete(STATUS_CONTROLLER_PATH + ID_PATH_VAR, id);
+
+        performWithoutToken(reqDel).andExpect(status().isForbidden());
+        assertEquals(taskStatusRepository.count(), 1);
+
+        performWithToken(reqDel, defaultUser1.getEmail()).andExpect(status().isOk());
+        assertEquals(taskStatusRepository.count(), 0);
+    }
+
+    @Test
+    void testTaskStatusGet() throws Exception {
+        addUser(defaultUser1);
+        addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+
+        Long id = taskStatusRepository.findAll().get(0).getId();
+        MockHttpServletRequestBuilder req = get(STATUS_CONTROLLER_PATH + ID_PATH_VAR, id);
+
+        String respAsString = performWithoutToken(req)
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        TaskStatus taskStatus = mapper.readValue(respAsString, new TypeReference<>(){});
+        assertEquals(taskStatus.getName(), defaultTaskStatus1.getName());
+    }
+
+    @Test
+    void testTaskStatusGetAll() throws Exception {
+        addUser(defaultUser1);
+        addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+        addTaskStatusUnderUser(defaultTaskStatus2, defaultUser1.getEmail());
+
+        MockHttpServletRequestBuilder req = get(STATUS_CONTROLLER_PATH);
+        String respAsString = performWithoutToken(req)
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        List<TaskStatus> list = mapper.readValue(respAsString, new TypeReference<>() {});
+        assertThat(list).hasSize(2);
+    }
+
+    @Test
+    void testTaskStatusUpdate() throws Exception {
+        addUser(defaultUser1);
+        addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+
+        Long id = taskStatusRepository.findAll().get(0).getId();
+        TaskStatusDto taskStatusNew = new TaskStatusDto("hello");
+        String newTaskStatusAsString = mapper.writeValueAsString(taskStatusNew);
+        MockHttpServletRequestBuilder req = put(STATUS_CONTROLLER_PATH + ID_PATH_VAR, id)
+                .content(newTaskStatusAsString)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        performWithoutToken(req).andExpect(status().isForbidden());
+
+        String updatedTaskStatusAsString = performWithToken(req, defaultUser1.getEmail())
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        TaskStatus updatedTaskStatus = mapper.readValue(updatedTaskStatusAsString, new TypeReference<>(){});
+        assertThat(updatedTaskStatus.getName()).isEqualTo(taskStatusNew.getName());
     }
 
     private ResultActions performWithToken(MockHttpServletRequestBuilder req, String userName) throws Exception {

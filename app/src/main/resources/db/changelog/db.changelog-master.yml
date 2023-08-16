@@ -1,15 +1,46 @@
+databaseChangeLog: []
+
 databaseChangeLog:
 - changeSet:
-    id: 1688978591438-1
-    author: prozex (generated)
+    id: 1692199992425-1
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692199992425-2
+    author: dima (generated)
     changes:
     - createSequence:
         incrementBy: 50
         sequenceName: users_seq
         startValue: 1
 - changeSet:
-    id: 1688978591438-2
-    author: prozex (generated)
+    id: 1692199992425-3
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692199992425-4
+    author: dima (generated)
     changes:
     - createTable:
         columns:

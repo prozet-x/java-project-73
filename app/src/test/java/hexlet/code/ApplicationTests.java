@@ -2,8 +2,8 @@ package hexlet.code;
 
 import java.util.List;
 import java.util.Map;
-
 import hexlet.code.config.SpringConfigForIT;
+import hexlet.code.dto.LoginDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -19,13 +19,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.*;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import hexlet.code.component.JWTHelper;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static hexlet.code.config.SpringConfigForIT.TEST_PROFILE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,15 +60,19 @@ class ApplicationTests {
     private static final String USERS_URL = "/users";
     private static final String ID_PATH_VAR = "/{id}";
 
-    private UserDto defaultUser = new UserDto("defFirstName", "defLastName", "def@email.com", "defPassword");
+    private static final String SPRING_USER_USERNAME = "username";
+
+    private UserDto defaultUser1 = new UserDto("defFirstName1", "defLastName1", "def1@email.com", "defPassword1");
+    private UserDto defaultUser2 = new UserDto("defFirstName2", "defLastName2", "def2@email.com", "defPassword2");
 
     private ResultActions addUser(UserDto userDto) throws Exception {
-        MockHttpServletRequestBuilder creationReq = post(USERS_URL).content(mapper.writeValueAsString(userDto)).contentType(MediaType.APPLICATION_JSON);
-        return mockMvc.perform(creationReq);
-    }
+        String userDtoAsJSONString = mapper.writeValueAsString(userDto);
 
-    private ResultActions addDefaultUser() throws Exception {
-        return addUser(defaultUser);
+        MockHttpServletRequestBuilder creationReq = post(USERS_URL)
+                .content(userDtoAsJSONString)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        return performWithoutToken(creationReq);
     }
 
     @BeforeAll
@@ -86,7 +93,7 @@ class ApplicationTests {
     @Test
     void testCreateUserGood() throws Exception {
         assertEquals(userRepository.count(), 0);
-        addDefaultUser().andExpect(status().isCreated());
+        addUser(defaultUser1).andExpect(status().isCreated());
         assertEquals(userRepository.count(), 1);
     }
 
@@ -111,34 +118,39 @@ class ApplicationTests {
 
     @Test
     void testDeleteUserGood() throws Exception {
-        addDefaultUser();
-        Long id = userRepository.findByEmail("def@email.com").get().getId();
-        final MockHttpServletRequestBuilder requestBuilder = delete(USERS_URL + "/" + id)
-                .header("Authorization", jwtHelper.expiring(Map.of("username", "def@email.com")));
-        mockMvc.perform(requestBuilder).andExpect(status().isOk());
+        addUser(defaultUser1);
+        Long id = userRepository.findByEmail(defaultUser1.getEmail()).get().getId();
+        final MockHttpServletRequestBuilder req = delete(USERS_URL + "/" + id);
+        performWithToken(req, defaultUser1.getEmail()).andExpect(status().isOk());
         assertEquals(userRepository.count(), 0);
     }
 
-    @Disabled
     @Test
     void testDeleteUserBad() throws Exception {
-        mockMvc.perform(delete(USERS_URL + "/999")).andExpect(status().isNotFound());
-        assertEquals(userRepository.count(), 0);
+        addUser(defaultUser1);
+        addUser(defaultUser2);
+        Long id1 = userRepository.findByEmail(defaultUser1.getEmail()).get().getId();
+        final MockHttpServletRequestBuilder req = delete(USERS_URL + ID_PATH_VAR, id1);
+        performWithToken(req, defaultUser2.getEmail()).andExpect(status().isForbidden());
+        assertEquals(userRepository.count(), 2);
     }
 
-    @Disabled
     @Test
     void testGetUserGood() throws Exception {
-        addDefaultUser();
-        addUser(new UserDto("fn", "ln", "e@mail.com", "pwd"));
+        addUser(defaultUser1);
+        addUser(defaultUser2);
 
-        User expectedUser = userRepository.findAll().get(1);
+        User expectedUser = userRepository.findAll().get(0);
+        User callingUser = userRepository.findAll().get(1);
 
-        MockHttpServletResponse response = mockMvc.perform(get(USERS_URL + ID_PATH_VAR, expectedUser.getId()))
+        MockHttpServletRequestBuilder req =  get(USERS_URL + ID_PATH_VAR, expectedUser.getId());
+
+        MockHttpServletResponse resp = performWithToken(req, callingUser.getEmail())
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
-        User user = mapper.readValue(response.getContentAsString(), new TypeReference<>() {
+
+        User user = mapper.readValue(resp.getContentAsString(), new TypeReference<>() {
         });
 
         assertEquals(expectedUser.getId(), user.getId());
@@ -147,21 +159,22 @@ class ApplicationTests {
         assertEquals(expectedUser.getLastName(), user.getLastName());
     }
 
-    @Disabled
     @Test
     void testGetUserBad() throws Exception {
-        addDefaultUser();
-        mockMvc.perform(get(USERS_URL + "/0"))
+        addUser(defaultUser1);
+        MockHttpServletRequestBuilder req = get(USERS_URL + ID_PATH_VAR, 100);
+        performWithToken(req, defaultUser1.getEmail())
                 .andExpect(status().isNotFound());
     }
 
-    @Disabled
     @Test
     void testGEtAllUsers() throws Exception {
-        addDefaultUser();
-        addUser(new UserDto("fn", "ln", "e@mail.com", "pwd"));
+        addUser(defaultUser1);
+        addUser(defaultUser2);
 
-        MockHttpServletResponse resp = mockMvc.perform(get(USERS_URL))
+        MockHttpServletRequestBuilder req = get(USERS_URL);
+
+        MockHttpServletResponse resp = performWithoutToken(req)
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -173,7 +186,7 @@ class ApplicationTests {
     @Disabled
     @Test
     void testUpdateUser() throws Exception {
-        addDefaultUser();
+        addUser(defaultUser1);
         UserDto userDto = new UserDto("newFN", "newLN", "new@EMAIL.com", "newPWD");
         User oldUser = userRepository.findAll().get(0);
 
@@ -188,5 +201,15 @@ class ApplicationTests {
         assertEquals(updatedUser.getEmail(), userDto.getEmail());
         assertEquals(updatedUser.getFirstName(), userDto.getFirstName());
         assertEquals(updatedUser.getLastName(), userDto.getLastName());
+    }
+
+    private ResultActions performWithToken(MockHttpServletRequestBuilder req, String userName) throws Exception {
+        String token = jwtHelper.expiring(Map.of(SPRING_USER_USERNAME, userName));
+        req.header(HttpHeaders.AUTHORIZATION, token);
+        return performWithoutToken(req);
+    }
+
+    private ResultActions performWithoutToken(MockHttpServletRequestBuilder req) throws Exception {
+        return mockMvc.perform(req);
     }
 }

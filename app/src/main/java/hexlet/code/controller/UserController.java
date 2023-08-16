@@ -7,6 +7,7 @@ import hexlet.code.repository.UserRepository;
 import hexlet.code.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.CREATED;
 import java.util.List;
@@ -22,7 +23,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    private static final String ONLY_OWNER_BY_ID = "@userRepository.findById(#id).get().getEmail() = authentication.getName()";
+    private static final String ONLY_OWNER_BY_ID = "@userRepository.findById(#id).get().getEmail() == authentication.getName()";
 
     @GetMapping
     public List<User> getAll() {
@@ -46,9 +47,9 @@ public class UserController {
         return userService.update(userDto, id);
     }
 
-    @PreAuthorize(ONLY_OWNER_BY_ID)
     @DeleteMapping(ID)
-    public void delete(@PathVariable final Long id) {
+    @PreAuthorize(ONLY_OWNER_BY_ID)
+    public void delete(@PathVariable final long id) {
         userService.deleteById(id);
     }
 }

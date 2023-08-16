@@ -22,8 +22,6 @@ public class TaskStatusController {
     private final TaskStatusRepository taskStatusRepository;
     private final TaskStatusService taskStatusService;
 
-    //private static final String ONLY_OWNER_BY_ID = "@taskStatusRepository.findById(#id).get().getId() = authentication.getName()";
-
     @GetMapping
     public List<TaskStatus> getAll() {
         return taskStatusRepository.findAll();
@@ -40,7 +38,6 @@ public class TaskStatusController {
     }
 
     @PutMapping(ID)
-    //@PreAuthorize()
     public TaskStatus update(@RequestBody @Valid TaskStatusDto taskStatusDto, @PathVariable final long id) {
         return taskStatusService.update(taskStatusDto, id);
     }

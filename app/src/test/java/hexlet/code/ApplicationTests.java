@@ -183,17 +183,16 @@ class ApplicationTests {
         assertThat(users).hasSize(2);
     }
 
-    @Disabled
     @Test
     void testUpdateUser() throws Exception {
         addUser(defaultUser1);
         UserDto userDto = new UserDto("newFN", "newLN", "new@EMAIL.com", "newPWD");
         User oldUser = userRepository.findAll().get(0);
 
-        MockHttpServletRequestBuilder creationReq = put(USERS_URL + ID_PATH_VAR, oldUser.getId())
+        MockHttpServletRequestBuilder req = put(USERS_URL + ID_PATH_VAR, oldUser.getId())
                 .content(mapper.writeValueAsString(userDto))
                 .contentType(MediaType.APPLICATION_JSON);
-        mockMvc.perform(creationReq)
+        performWithToken(req, oldUser.getEmail())
                 .andExpect(status().isOk());
 
         User updatedUser = userRepository.findById(oldUser.getId()).get();

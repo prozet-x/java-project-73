@@ -7,6 +7,7 @@ import hexlet.code.model.TaskStatus;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,11 @@ public class TaskStatusControllerIT {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
+    @BeforeEach
+    void beforeEach() throws Exception {
+        testUtils.addUser(defaultUser1);
+    }
+
     @AfterEach
     void clearBase() {
         testUtils.clear();
@@ -44,7 +50,6 @@ public class TaskStatusControllerIT {
 
     @Test
     void testTaskStatusCreate() throws Exception {
-        testUtils.addUser(defaultUser1);
         assertEquals(taskStatusRepository.count(), 0);
 
         MockHttpServletRequestBuilder req = post(STATUS_CONTROLLER_PATH)
@@ -63,8 +68,7 @@ public class TaskStatusControllerIT {
 
     @Test
     void testTaskStatusDelete() throws Exception {
-        testUtils.addUser(defaultUser1);
-        addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
         assertEquals(taskStatusRepository.count(), 1);
 
         Long id = taskStatusRepository.findAll().get(0).getId();
@@ -79,8 +83,7 @@ public class TaskStatusControllerIT {
 
     @Test
     void testTaskStatusGet() throws Exception {
-        testUtils.addUser(defaultUser1);
-        addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
 
         Long id = taskStatusRepository.findAll().get(0).getId();
         MockHttpServletRequestBuilder req = get(STATUS_CONTROLLER_PATH + ID_PATH_VAR, id);
@@ -96,9 +99,8 @@ public class TaskStatusControllerIT {
 
     @Test
     void testTaskStatusGetAll() throws Exception {
-        testUtils.addUser(defaultUser1);
-        addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
-        addTaskStatusUnderUser(defaultTaskStatus2, defaultUser1.getEmail());
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus2, defaultUser1.getEmail());
 
         MockHttpServletRequestBuilder req = get(STATUS_CONTROLLER_PATH);
         String respAsString = testUtils.performWithoutToken(req)
@@ -113,8 +115,7 @@ public class TaskStatusControllerIT {
 
     @Test
     void testTaskStatusUpdate() throws Exception {
-        testUtils.addUser(defaultUser1);
-        addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
 
         Long id = taskStatusRepository.findAll().get(0).getId();
         TaskStatusDto taskStatusNew = new TaskStatusDto("hello");
@@ -133,15 +134,5 @@ public class TaskStatusControllerIT {
 
         TaskStatus updatedTaskStatus = mapper.readValue(updatedTaskStatusAsString, new TypeReference<>(){});
         assertThat(updatedTaskStatus.getName()).isEqualTo(taskStatusNew.getName());
-    }
-
-    private void addTaskStatusUnderUser(TaskStatusDto taskStatusDto, String userName) throws Exception {
-        String taskStatusDtoAsJSONString = mapper.writeValueAsString(taskStatusDto);
-
-        MockHttpServletRequestBuilder creationReq = post(STATUS_CONTROLLER_PATH)
-                .content(taskStatusDtoAsJSONString)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        testUtils.performWithToken(creationReq, userName);
     }
 }

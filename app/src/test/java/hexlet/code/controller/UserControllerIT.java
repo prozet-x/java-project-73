@@ -25,14 +25,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static hexlet.code.controller.UserController.USER_CONTROLLER_PATH;
 
 @AutoConfigureMockMvc
 @ActiveProfiles(TEST_PROFILE)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringConfigForIT.class)
 public class UserControllerIT {
-    public static final String USERS_URL = "/users";
-
     @Autowired
     private TestUtils testUtils;
 
@@ -74,7 +73,7 @@ public class UserControllerIT {
     void testDeleteUserGood() throws Exception {
         testUtils.addUser(defaultUser1);
         Long id = userRepository.findByEmail(defaultUser1.getEmail()).get().getId();
-        final MockHttpServletRequestBuilder req = delete(USERS_URL + "/" + id);
+        final MockHttpServletRequestBuilder req = delete(USER_CONTROLLER_PATH + "/" + id);
         testUtils.performWithToken(req, defaultUser1.getEmail()).andExpect(status().isOk());
         assertEquals(userRepository.count(), 0);
     }
@@ -84,7 +83,7 @@ public class UserControllerIT {
         testUtils.addUser(defaultUser1);
         testUtils.addUser(defaultUser2);
         Long id1 = userRepository.findByEmail(defaultUser1.getEmail()).get().getId();
-        final MockHttpServletRequestBuilder req = delete(USERS_URL + ID_PATH_VAR, id1);
+        final MockHttpServletRequestBuilder req = delete(USER_CONTROLLER_PATH + ID_PATH_VAR, id1);
         testUtils.performWithToken(req, defaultUser2.getEmail()).andExpect(status().isForbidden());
         assertEquals(userRepository.count(), 2);
     }
@@ -97,7 +96,7 @@ public class UserControllerIT {
         User expectedUser = userRepository.findAll().get(0);
         User callingUser = userRepository.findAll().get(1);
 
-        MockHttpServletRequestBuilder req =  get(USERS_URL + ID_PATH_VAR, expectedUser.getId());
+        MockHttpServletRequestBuilder req =  get(USER_CONTROLLER_PATH + ID_PATH_VAR, expectedUser.getId());
 
         MockHttpServletResponse resp = testUtils.performWithToken(req, callingUser.getEmail())
                 .andExpect(status().isOk())
@@ -116,7 +115,7 @@ public class UserControllerIT {
     @Test
     void testGetUserBad() throws Exception {
         testUtils.addUser(defaultUser1);
-        MockHttpServletRequestBuilder req = get(USERS_URL + ID_PATH_VAR, 100);
+        MockHttpServletRequestBuilder req = get(USER_CONTROLLER_PATH + ID_PATH_VAR, 100);
         testUtils.performWithToken(req, defaultUser1.getEmail())
                 .andExpect(status().isNotFound());
     }
@@ -126,7 +125,7 @@ public class UserControllerIT {
         testUtils.addUser(defaultUser1);
         testUtils.addUser(defaultUser2);
 
-        MockHttpServletRequestBuilder req = get(USERS_URL);
+        MockHttpServletRequestBuilder req = get(USER_CONTROLLER_PATH);
 
         MockHttpServletResponse resp = testUtils.performWithoutToken(req)
                 .andExpect(status().isOk())
@@ -143,7 +142,7 @@ public class UserControllerIT {
         UserDto userDto = new UserDto("newFN", "newLN", "new@EMAIL.com", "newPWD");
         User oldUser = userRepository.findAll().get(0);
 
-        MockHttpServletRequestBuilder req = put(USERS_URL + ID_PATH_VAR, oldUser.getId())
+        MockHttpServletRequestBuilder req = put(USER_CONTROLLER_PATH + ID_PATH_VAR, oldUser.getId())
                 .content(toJSON(userDto))
                 .contentType(MediaType.APPLICATION_JSON);
         testUtils.performWithToken(req, oldUser.getEmail())

@@ -50,6 +50,9 @@ public class TestUtils {
     public static final TaskStatusDto defaultTaskStatus1 = new TaskStatusDto("status1");
     public static final TaskStatusDto defaultTaskStatus2 = new TaskStatusDto("status2");
 
+    public static final String TASK_DEFAULT_NAME = "defTaskName";
+    public static final String TASK_DEFAULT_DESC = "defTaskDesc";
+
     public static final String SPRING_USER_USERNAME = "username";
 
     public ResultActions addUser(UserDto userDto) throws Exception {
@@ -62,21 +65,21 @@ public class TestUtils {
         return performWithoutToken(creationReq);
     }
 
-    public ResultActions addTaskStatusUnderUser(TaskStatusDto taskStatusDto, String userName) throws Exception {
+    public ResultActions addTaskStatusUnderUser(TaskStatusDto taskStatusDto, UserDto userDto) throws Exception {
         String taskStatusDtoAsJSONString = mapper.writeValueAsString(taskStatusDto);
 
         MockHttpServletRequestBuilder creationReq = post(STATUS_CONTROLLER_PATH)
                 .content(taskStatusDtoAsJSONString)
                 .contentType(MediaType.APPLICATION_JSON);
 
-        return performWithToken(creationReq, userName);
+        return performWithToken(creationReq, userDto);
     }
 
     public ResultActions addTaskUnderUser(TaskDto taskDto, UserDto userDto) throws Exception {
         MockHttpServletRequestBuilder req = post(TASK_CONTROLLER_PATH)
                 .content(toJSON(taskDto))
                 .contentType(MediaType.APPLICATION_JSON);
-        return performWithToken(req, userDto.getEmail());
+        return performWithToken(req, userDto);
     }
 
     public TaskDto fillTaskDto(TaskDto taskDto, Long statusId, Long authorId, Long executorId) {
@@ -88,8 +91,8 @@ public class TestUtils {
 
     public TaskDto getDefaultTaskDto() {
         TaskDto taskDto = new TaskDto();
-        taskDto.setName("defTaskName");
-        taskDto.setDescr("defTaskDescr");
+        taskDto.setName(TASK_DEFAULT_NAME);
+        taskDto.setDescr(TASK_DEFAULT_DESC);
         return taskDto;
     }
 
@@ -99,8 +102,8 @@ public class TestUtils {
         taskStatusRepository.deleteAll();
     }
 
-    public ResultActions performWithToken(MockHttpServletRequestBuilder req, String userName) throws Exception {
-        String token = jwtHelper.expiring(Map.of(SPRING_USER_USERNAME, userName));
+    public ResultActions performWithToken(MockHttpServletRequestBuilder req, UserDto userDto) throws Exception {
+        String token = jwtHelper.expiring(Map.of(SPRING_USER_USERNAME, userDto.getEmail()));
         req.header(HttpHeaders.AUTHORIZATION, token);
         return performWithoutToken(req);
     }

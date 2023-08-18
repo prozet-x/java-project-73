@@ -59,7 +59,7 @@ public class TaskStatusControllerIT {
         testUtils.performWithoutToken(req).andExpect(status().isForbidden());
         assertEquals(taskStatusRepository.count(), 0);
 
-        testUtils.performWithToken(req, defaultUser1.getEmail()).andExpect(status().isOk());
+        testUtils.performWithToken(req, defaultUser1).andExpect(status().isOk());
         assertEquals(taskStatusRepository.count(), 1);
 
         String nameOfSavedStatus = taskStatusRepository.findAll().get(0).getName();
@@ -68,7 +68,7 @@ public class TaskStatusControllerIT {
 
     @Test
     void testTaskStatusDelete() throws Exception {
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
         assertEquals(taskStatusRepository.count(), 1);
 
         Long id = taskStatusRepository.findAll().get(0).getId();
@@ -77,13 +77,13 @@ public class TaskStatusControllerIT {
         testUtils.performWithoutToken(reqDel).andExpect(status().isForbidden());
         assertEquals(taskStatusRepository.count(), 1);
 
-        testUtils.performWithToken(reqDel, defaultUser1.getEmail()).andExpect(status().isOk());
+        testUtils.performWithToken(reqDel, defaultUser1).andExpect(status().isOk());
         assertEquals(taskStatusRepository.count(), 0);
     }
 
     @Test
     void testTaskStatusGet() throws Exception {
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
 
         Long id = taskStatusRepository.findAll().get(0).getId();
         MockHttpServletRequestBuilder req = get(STATUS_CONTROLLER_PATH + ID_PATH_VAR, id);
@@ -93,14 +93,14 @@ public class TaskStatusControllerIT {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        TaskStatus taskStatus = mapper.readValue(respAsString, new TypeReference<>(){});
+        TaskStatus taskStatus = fromJSON(respAsString, new TypeReference<>(){});
         assertEquals(taskStatus.getName(), defaultTaskStatus1.getName());
     }
 
     @Test
     void testTaskStatusGetAll() throws Exception {
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus2, defaultUser1.getEmail());
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus2, defaultUser1);
 
         MockHttpServletRequestBuilder req = get(STATUS_CONTROLLER_PATH);
         String respAsString = testUtils.performWithoutToken(req)
@@ -109,30 +109,30 @@ public class TaskStatusControllerIT {
                 .getResponse()
                 .getContentAsString();
 
-        List<TaskStatus> list = mapper.readValue(respAsString, new TypeReference<>() {});
+        List<TaskStatus> list = fromJSON(respAsString, new TypeReference<>() {});
         assertThat(list).hasSize(2);
     }
 
     @Test
     void testTaskStatusUpdate() throws Exception {
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
 
         Long id = taskStatusRepository.findAll().get(0).getId();
         TaskStatusDto taskStatusNew = new TaskStatusDto("hello");
-        String newTaskStatusAsString = mapper.writeValueAsString(taskStatusNew);
+        String newTaskStatusAsString = toJSON(taskStatusNew);
         MockHttpServletRequestBuilder req = put(STATUS_CONTROLLER_PATH + ID_PATH_VAR, id)
                 .content(newTaskStatusAsString)
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.performWithoutToken(req).andExpect(status().isForbidden());
 
-        String updatedTaskStatusAsString = testUtils.performWithToken(req, defaultUser1.getEmail())
+        String updatedTaskStatusAsString = testUtils.performWithToken(req, defaultUser1)
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
-        TaskStatus updatedTaskStatus = mapper.readValue(updatedTaskStatusAsString, new TypeReference<>(){});
+        TaskStatus updatedTaskStatus = fromJSON(updatedTaskStatusAsString, new TypeReference<>(){});
         assertThat(updatedTaskStatus.getName()).isEqualTo(taskStatusNew.getName());
     }
 }

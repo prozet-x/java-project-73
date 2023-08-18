@@ -74,7 +74,7 @@ public class UserControllerIT {
         testUtils.addUser(defaultUser1);
         Long id = userRepository.findByEmail(defaultUser1.getEmail()).get().getId();
         final MockHttpServletRequestBuilder req = delete(USER_CONTROLLER_PATH + "/" + id);
-        testUtils.performWithToken(req, defaultUser1.getEmail()).andExpect(status().isOk());
+        testUtils.performWithToken(req, defaultUser1).andExpect(status().isOk());
         assertEquals(userRepository.count(), 0);
     }
 
@@ -84,7 +84,7 @@ public class UserControllerIT {
         testUtils.addUser(defaultUser2);
         Long id1 = userRepository.findByEmail(defaultUser1.getEmail()).get().getId();
         final MockHttpServletRequestBuilder req = delete(USER_CONTROLLER_PATH + ID_PATH_VAR, id1);
-        testUtils.performWithToken(req, defaultUser2.getEmail()).andExpect(status().isForbidden());
+        testUtils.performWithToken(req, defaultUser2).andExpect(status().isForbidden());
         assertEquals(userRepository.count(), 2);
     }
 
@@ -92,13 +92,11 @@ public class UserControllerIT {
     void testGetUserGood() throws Exception {
         testUtils.addUser(defaultUser1);
         testUtils.addUser(defaultUser2);
+        Long id = userRepository.findByEmail(defaultUser1.getEmail()).get().getId();
 
-        User expectedUser = userRepository.findAll().get(0);
-        User callingUser = userRepository.findAll().get(1);
+        MockHttpServletRequestBuilder req =  get(USER_CONTROLLER_PATH + ID_PATH_VAR, id);
 
-        MockHttpServletRequestBuilder req =  get(USER_CONTROLLER_PATH + ID_PATH_VAR, expectedUser.getId());
-
-        MockHttpServletResponse resp = testUtils.performWithToken(req, callingUser.getEmail())
+        MockHttpServletResponse resp = testUtils.performWithToken(req, defaultUser2)
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -106,17 +104,16 @@ public class UserControllerIT {
         User user = fromJSON(resp.getContentAsString(), new TypeReference<>() {
         });
 
-        assertEquals(expectedUser.getId(), user.getId());
-        assertEquals(expectedUser.getEmail(), user.getEmail());
-        assertEquals(expectedUser.getFirstName(), user.getFirstName());
-        assertEquals(expectedUser.getLastName(), user.getLastName());
+        assertEquals(defaultUser1.getEmail(), user.getEmail());
+        assertEquals(defaultUser1.getFirstName(), user.getFirstName());
+        assertEquals(defaultUser1.getLastName(), user.getLastName());
     }
 
     @Test
     void testGetUserBad() throws Exception {
         testUtils.addUser(defaultUser1);
         MockHttpServletRequestBuilder req = get(USER_CONTROLLER_PATH + ID_PATH_VAR, 100);
-        testUtils.performWithToken(req, defaultUser1.getEmail())
+        testUtils.performWithToken(req, defaultUser1)
                 .andExpect(status().isNotFound());
     }
 
@@ -140,15 +137,16 @@ public class UserControllerIT {
     void testUpdateUser() throws Exception {
         testUtils.addUser(defaultUser1);
         UserDto userDto = new UserDto("newFN", "newLN", "new@EMAIL.com", "newPWD");
-        User oldUser = userRepository.findAll().get(0);
+        Long id = userRepository.findAll().get(0).getId();
+        // User oldUser = userRepository.findAll().get(0);
 
-        MockHttpServletRequestBuilder req = put(USER_CONTROLLER_PATH + ID_PATH_VAR, oldUser.getId())
+        MockHttpServletRequestBuilder req = put(USER_CONTROLLER_PATH + ID_PATH_VAR, id)
                 .content(toJSON(userDto))
                 .contentType(MediaType.APPLICATION_JSON);
-        testUtils.performWithToken(req, oldUser.getEmail())
+        testUtils.performWithToken(req, defaultUser1)
                 .andExpect(status().isOk());
 
-        User updatedUser = userRepository.findById(oldUser.getId()).get();
+        User updatedUser = userRepository.findById(id).get();
 
         assertEquals(updatedUser.getEmail(), userDto.getEmail());
         assertEquals(updatedUser.getFirstName(), userDto.getFirstName());

@@ -1,7 +1,9 @@
 package hexlet.code.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.config.SpringConfigForIT;
 import hexlet.code.dto.TaskDto;
+import hexlet.code.dto.UserDto;
 import hexlet.code.model.Task;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
@@ -18,11 +20,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static hexlet.code.utils.TestUtils.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static hexlet.code.controller.TaskController.TASK_CONTROLLER_PATH;
 import static hexlet.code.config.SpringConfigForIT.TEST_PROFILE;
 
@@ -46,7 +51,7 @@ public class TaskControllerIT {
     @BeforeEach
     void beforeEach() throws Exception {
         testUtils.addUser(defaultUser1);
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1.getEmail());
+        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
     }
 
     @AfterEach
@@ -55,7 +60,7 @@ public class TaskControllerIT {
     }
 
     @Test
-    void testCreate() throws Exception {
+    void testCreateTask() throws Exception {
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, userId);
@@ -76,7 +81,91 @@ public class TaskControllerIT {
     }
 
     @Test
-    void testGetById() {
+    void testGeTasksById() throws Exception {
+        Long userId = userRepository.findAll().get(0).getId();
+        Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, userId);
+        testUtils.addTaskUnderUser(taskDto, defaultUser1);
+        Long id = taskRepository.findAll().get(0).getId();
 
+        MockHttpServletRequestBuilder req = get(TASK_CONTROLLER_PATH + ID_PATH_VAR, id);
+        String taskAsJSON = testUtils.performWithToken(req, defaultUser1)
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        Task task = fromJSON(taskAsJSON, new TypeReference<Task>() {});
+        assertThat(task.getName()).isEqualTo(TASK_DEFAULT_NAME);
+        assertThat(task.getDescr()).isEqualTo(TASK_DEFAULT_DESC);
+    }
+
+    @Test
+    void testGetAllTasks() throws Exception {
+        testUtils.addUser(defaultUser2);
+
+        Long userId1 = userRepository.findAll().get(0).getId();
+        Long userId2 = userRepository.findAll().get(1).getId();
+        Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
+
+        TaskDto taskDto1 = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId1, userId2);
+        TaskDto taskDto2 = new TaskDto("taskName2", "taskDesc2", taskStatusId, userId2, userId1);
+
+        testUtils.addTaskUnderUser(taskDto1, defaultUser1);
+        testUtils.addTaskUnderUser(taskDto2, defaultUser2);
+
+        MockHttpServletRequestBuilder req = get(TASK_CONTROLLER_PATH);
+        String tasksAsJSON = testUtils.performWithToken(req, defaultUser1)
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        List<Task> tasks = fromJSON(tasksAsJSON, new TypeReference<List<Task>>(){});
+        assertThat(tasks).hasSize(2);
+    }
+
+    @Test
+    void testUpdateTask() throws Exception {
+        testUtils.addUser(defaultUser2);
+
+        Long userId1 = userRepository.findAll().get(0).getId();
+        Long userId2 = userRepository.findAll().get(1).getId();
+        Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
+
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId1, userId1);
+        testUtils.addTaskUnderUser(taskDto, defaultUser1);
+        Long id = taskRepository.findAll().get(0).getId();
+        TaskDto taskDtoForUpdate = new TaskDto("taskNameUpdated", "taskDescUpdated", taskStatusId, userId2, userId2);
+
+        MockHttpServletRequestBuilder req = put(TASK_CONTROLLER_PATH + ID_PATH_VAR, id)
+                .content(toJSON(taskDtoForUpdate))
+                .contentType(MediaType.APPLICATION_JSON);
+        testUtils.performWithToken(req, defaultUser1);
+
+        Task updatedTask = taskRepository.findAll().get(0);
+        assertThat(updatedTask.getName()).isEqualTo(taskDtoForUpdate.getName());
+        assertThat(updatedTask.getDescr()).isEqualTo(taskDtoForUpdate.getDescr());
+        assertThat(updatedTask.getAuthor().getId()).isEqualTo(userId2);
+        assertThat(updatedTask.getExecutor().getId()).isEqualTo(userId2);
+    }
+
+    @Test
+    void testDeleteTask() throws Exception {
+        assertThat(taskRepository.count()).isEqualTo(0);
+
+        Long userId = userRepository.findAll().get(0).getId();
+        Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
+
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, userId);
+        testUtils.addTaskUnderUser(taskDto, defaultUser1);
+
+        assertThat(taskRepository.count()).isEqualTo(1);
+
+        Long id = taskRepository.findAll().get(0).getId();
+        MockHttpServletRequestBuilder req = delete(TASK_CONTROLLER_PATH + ID_PATH_VAR, id);
+
+        testUtils.performWithToken(req, defaultUser1);
+
+        assertThat(taskRepository.count()).isEqualTo(0);
     }
 }

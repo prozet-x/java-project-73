@@ -19,6 +19,7 @@ public class TaskServiceImpl implements TaskService{
     private TaskRepository taskRepository;
     private UserRepository userRepository;
     private TaskStatusRepository taskStatusRepository;
+
     @Override
     public Task createNew(TaskDto taskDto) {
         final Task task = new Task();
@@ -48,9 +49,14 @@ public class TaskServiceImpl implements TaskService{
 
     private void setTaskFromTaskDto(final Task task, final TaskDto taskDto) {
         task.setName(taskDto.getName());
-        task.setAuthor(userRepository.findById(taskDto.getAuthorId()).get());
+//        task.setAuthor(userRepository.findById(taskDto.getAuthorId()).get());
+//        task.setDescr(taskDto.getDescr());
+//        task.setExecutor(userRepository.findById(taskDto.getExecutorId()).get());
+//        task.setStatus(taskStatusRepository.findById(taskDto.getStatusId()).get());
+
+        task.setAuthor(taskDto.getAuthorId());
         task.setDescr(taskDto.getDescr());
-        task.setExecutor(userRepository.findById(taskDto.getExecutorId()).get());
-        task.setStatus(taskStatusRepository.findById(taskDto.getStatusId()).get());
+        task.setExecutor(taskDto.getExecutorId());
+        task.setStatus(taskDto.getStatusId());
     }
 }

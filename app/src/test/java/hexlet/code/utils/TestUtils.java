@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import hexlet.code.dto.TaskDto;
 import hexlet.code.dto.TaskStatusDto;
 import hexlet.code.dto.UserDto;
-import hexlet.code.model.Task;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -80,6 +79,13 @@ public class TestUtils {
                 .content(toJSON(taskDto))
                 .contentType(MediaType.APPLICATION_JSON);
         return performWithToken(req, userDto);
+    }
+
+    public ResultActions addTaskUnauthorized(TaskDto taskDto) throws Exception {
+        MockHttpServletRequestBuilder req = post(TASK_CONTROLLER_PATH)
+                .content(toJSON(taskDto))
+                .contentType(MediaType.APPLICATION_JSON);
+        return performWithoutToken(req);
     }
 
     public TaskDto fillTaskDto(TaskDto taskDto, Long statusId, Long authorId, Long executorId) {

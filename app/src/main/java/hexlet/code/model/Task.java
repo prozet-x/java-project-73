@@ -8,31 +8,34 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.util.Date;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Size(min = 1)
-    @NotNull
+    @Size(min = 2)
     private String name;
 
     private String descr;
 
-    @OneToOne
-    @NotNull
-    private TaskStatus status;
+//    @ManyToOne
+//    private TaskStatus status;
+//
+//    @ManyToOne
+//    private User author;
+//
+//    @ManyToOne
+//    private User executor;
 
-    @NotNull
-    @OneToOne
-    private User author;
+    private Long status;
 
-    @OneToOne
-    private User executor;
+    private Long author;
+
+    private Long executor;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

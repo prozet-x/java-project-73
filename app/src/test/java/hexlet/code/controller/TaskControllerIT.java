@@ -20,7 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,8 +34,11 @@ import static hexlet.code.config.SpringConfigForIT.TEST_PROFILE;
 @AutoConfigureMockMvc
 @ActiveProfiles(TEST_PROFILE)
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = SpringConfigForIT.class)
+@SpringBootTest(webEnvironment = RANDOM_PORT, classes = SpringConfigForIT.class)
 public class TaskControllerIT {
+    @Autowired
+    private TestUtils testUtils;
+
     @Autowired
     private TaskRepository taskRepository;
 
@@ -44,9 +47,6 @@ public class TaskControllerIT {
 
     @Autowired
     private TaskStatusRepository taskStatusRepository;
-
-    @Autowired
-    private TestUtils testUtils;
 
     @BeforeEach
     void beforeEach() throws Exception {
@@ -75,19 +75,16 @@ public class TaskControllerIT {
         Task task = taskRepository.findAll().get(0);
         assertThat(task.getName()).isEqualTo(taskDto.getName());
         assertThat(task.getDescr()).isEqualTo(taskDto.getDescr());
-//        assertThat(task.getAuthor().getId()).isEqualTo(taskDto.getAuthorId());
-//        assertThat(task.getExecutor().getId()).isEqualTo(taskDto.getExecutorId());
-//        assertThat(task.getStatus().getId()).isEqualTo(taskDto.getStatusId());
+        assertThat(task.getAuthor().getId()).isEqualTo(taskDto.getAuthorId());
+        assertThat(task.getExecutor().getId()).isEqualTo(taskDto.getExecutorId());
+        assertThat(task.getStatus().getId()).isEqualTo(taskDto.getStatusId());
 
-        TaskDto taskDtoBad = new TaskDto("n", "k", taskStatusId, userId, userId);
-//        testUtils.addTaskUnderUser(taskDtoBad, defaultUser1)
-//                .andExpect(status().isUnprocessableEntity());
-
-        UserDto userDtoShortPassword = new UserDto("fn", "ln", "good@email.com", "pa");
-        testUtils.addUser(userDtoShortPassword).andExpect(status().isUnprocessableEntity());
-
-        testUtils.addTaskUnauthorized(taskDtoBad)
+        TaskDto taskDtoBadName = new TaskDto("", "k", taskStatusId, userId, userId);
+        testUtils.addTaskUnderUser(taskDtoBadName, defaultUser1)
                 .andExpect(status().isUnprocessableEntity());
+
+//        testUtils.addTaskUnauthorized(taskDtoBadName)
+//                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test

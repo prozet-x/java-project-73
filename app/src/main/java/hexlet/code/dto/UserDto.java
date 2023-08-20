@@ -12,9 +12,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class UserDto {
     @NotBlank
+    @Size(min = 1)
     private String firstName;
 
     @NotBlank
+    @Size(min = 1)
     private String lastName;
 
     @NotBlank

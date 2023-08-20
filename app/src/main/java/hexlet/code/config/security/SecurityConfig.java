@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -45,17 +46,17 @@ public class SecurityConfig {
     // - POST('/api/login')
     // - все запросы НЕ начинающиеся на '/api'
 
-    private final UserDetailsService userDetailsService;
+    //private final UserDetailsService userDetailsService;
     private final JWTHelper jwtHelper;
-    private final String baseUrl;
+    //private final String baseUrl;
     private final RequestMatcher loginRequest;
     private final RequestMatcher publicUrls;
 
     public SecurityConfig(@Value("${base-url}") final String baseUrl,
                           final UserDetailsService userDetailsService,
                           final JWTHelper jwtHelper) {
-        this.baseUrl = baseUrl;
-        this.userDetailsService = userDetailsService;
+        //this.baseUrl = baseUrl;
+        //this.userDetailsService = userDetailsService;
         this.jwtHelper = jwtHelper;
         this.loginRequest = new AntPathRequestMatcher(baseUrl + LOGIN, POST.toString());
         this.publicUrls = new OrRequestMatcher(
@@ -63,7 +64,6 @@ public class SecurityConfig {
                 new AntPathRequestMatcher(baseUrl + USER_CONTROLLER_PATH, POST.toString()),
                 new AntPathRequestMatcher(baseUrl + USER_CONTROLLER_PATH, GET.toString()),
                 new AntPathRequestMatcher(baseUrl + STATUS_CONTROLLER_PATH + "/**", GET.toString()),
-                new AntPathRequestMatcher(baseUrl + TASK_CONTROLLER_PATH, POST.toString()), // к удалению
                 new NegatedRequestMatcher(new AntPathRequestMatcher(baseUrl + "/**"))
         );
     }
@@ -89,24 +89,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
             .authorizeRequests()
             .requestMatchers(publicUrls).permitAll()
-                .anyRequest().authenticated().and()
-                .addFilter(
-                        new JWTAuthenticationFilter(
-                                authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)),
-                                loginRequest,
-                                jwtHelper
-                        )
-                )
-                .addFilterBefore(
-                        new JWTAuthorizationFilter(publicUrls, jwtHelper),
-                        UsernamePasswordAuthenticationFilter.class
-                )
-                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.disable())
-                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.disable())
-                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.disable());
+            .anyRequest().authenticated().and()
+            .addFilter(
+                    new JWTAuthenticationFilter(
+                            authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)),
+                            loginRequest,
+                            jwtHelper
+                    )
+            )
+            .addFilterBefore(
+                    new JWTAuthorizationFilter(publicUrls, jwtHelper),
+                    UsernamePasswordAuthenticationFilter.class
+            )
+            .formLogin(AbstractHttpConfigurer::disable)
+            .sessionManagement(AbstractHttpConfigurer::disable)
+            .logout(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }

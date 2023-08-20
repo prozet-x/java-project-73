@@ -49,14 +49,9 @@ public class TaskServiceImpl implements TaskService{
 
     private void setTaskFromTaskDto(final Task task, final TaskDto taskDto) {
         task.setName(taskDto.getName());
-//        task.setAuthor(userRepository.findById(taskDto.getAuthorId()).get());
-//        task.setDescr(taskDto.getDescr());
-//        task.setExecutor(userRepository.findById(taskDto.getExecutorId()).get());
-//        task.setStatus(taskStatusRepository.findById(taskDto.getStatusId()).get());
-
-        task.setAuthor(taskDto.getAuthorId());
+        task.setAuthor(userRepository.findById(taskDto.getAuthorId()).get());
         task.setDescr(taskDto.getDescr());
-        task.setExecutor(taskDto.getExecutorId());
-        task.setStatus(taskDto.getStatusId());
+        task.setExecutor(userRepository.findById(taskDto.getExecutorId()).get());
+        task.setStatus(taskStatusRepository.findById(taskDto.getStatusId()).get());
     }
 }

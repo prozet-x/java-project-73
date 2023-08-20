@@ -1,6 +1,7 @@
 package hexlet.code.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -17,25 +18,22 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Size(min = 2)
+    @Size(min = 1)
+//    @NotBlank
     private String name;
 
     private String descr;
 
-//    @ManyToOne
-//    private TaskStatus status;
-//
-//    @ManyToOne
-//    private User author;
-//
-//    @ManyToOne
-//    private User executor;
+    @ManyToOne
+    @NotNull
+    private TaskStatus status;
 
-    private Long status;
+    @ManyToOne
+    @NotNull
+    private User author;
 
-    private Long author;
-
-    private Long executor;
+    @ManyToOne
+    private User executor;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

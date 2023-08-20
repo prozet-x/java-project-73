@@ -4,6 +4,7 @@ import hexlet.code.dto.TaskDto;
 import hexlet.code.model.Task;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,12 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task createNew(@RequestBody final TaskDto taskDto) {
+    public Task createNew(@RequestBody @Valid final TaskDto taskDto) {
         return taskService.createNew(taskDto);
     }
 
     @PutMapping(ID)
-    public Task update(@RequestBody final TaskDto taskDto, @PathVariable final Long id) {
+    public Task update(@RequestBody @Valid final TaskDto taskDto, @PathVariable final Long id) {
         return taskService.update(taskDto, id);
     }
 

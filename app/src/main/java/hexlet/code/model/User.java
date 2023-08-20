@@ -31,16 +31,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank
     @Size(min = 1)
     private String firstName;
 
+    @NotBlank
     @Size(min = 1)
     private String lastName;
 
+    @NotBlank
     @Email
     private String email;
 
-    @Size(min = 3)
+    @Size(min = 3, max = 100)
+    @NotBlank
     @JsonIgnore
     private String password;
 

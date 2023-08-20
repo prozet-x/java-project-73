@@ -12,13 +12,15 @@ import lombok.NoArgsConstructor;
 @Data
 public class TaskDto {
     @NotBlank
-    @Size(min = 2)
+    @Size(min = 1)
     private String name;
 
     private String descr;
 
+    @NotNull
     private Long statusId;
 
+    @NotNull
     private Long authorId;
 
     private Long executorId;

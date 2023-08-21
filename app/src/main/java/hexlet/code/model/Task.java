@@ -19,7 +19,7 @@ public class Task {
     private Long id;
 
     @Size(min = 1)
-//    @NotBlank
+    @NotBlank
     private String name;
 
     private String descr;

@@ -6,6 +6,7 @@ import hexlet.code.repository.TaskRepository;
 import hexlet.code.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,8 @@ import static hexlet.code.controller.TaskController.TASK_CONTROLLER_PATH;
 public class TaskController {
     public static final String TASK_CONTROLLER_PATH = "/task";
     private final String ID = "/{id}";
+
+    private static final String ONLY_CREATOR_BY_TASK_ID = "@taskRepository.findById(#id).get().getAuthor().getEmail() == authentication.getName()";
 
     private TaskRepository taskRepository;
     private TaskService taskService;
@@ -43,6 +46,7 @@ public class TaskController {
     }
 
     @DeleteMapping(ID)
+    @PreAuthorize(ONLY_CREATOR_BY_TASK_ID)
     public void delete(@PathVariable final Long id) {
         taskService.deleteById(id);
     }

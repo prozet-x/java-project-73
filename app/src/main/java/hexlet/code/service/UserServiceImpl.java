@@ -2,9 +2,11 @@ package hexlet.code.service;
 
 import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
+import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
@@ -15,6 +17,7 @@ import java.util.NoSuchElementException;
 public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
 
     @Override
     public User createNew(UserDto userDto) {
@@ -41,6 +44,10 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(id)) {
             throw new NoSuchElementException(String.format("User with id %d not found", id));
         }
-        userRepository.deleteById(id);
+        if (!taskRepository.existsByAuthor(userRepository.findById(id).get())) {
+            userRepository.deleteById(id);
+        } else {
+            throw new DataIntegrityViolationException("There are tasks where the author is the user being deleted");
+        }
     }
 }

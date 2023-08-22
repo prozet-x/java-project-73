@@ -197,6 +197,12 @@ public class TaskControllerIT {
 
         testUtils.performWithoutToken(req)
                 .andExpect(status().isForbidden());
+        assertThat(taskRepository.count()).isEqualTo(1);
+
+        MockHttpServletRequestBuilder reqForDeletingUnderOtherUser = delete(TASK_CONTROLLER_PATH + ID_PATH_VAR, id);
+        testUtils.performWithToken(reqForDeletingUnderOtherUser, defaultUser2)
+                .andExpect(status().isForbidden());
+        assertThat(taskRepository.count()).isEqualTo(1);
 
         testUtils.performWithToken(req, defaultUser1)
                 .andExpect(status().isOk());

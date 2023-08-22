@@ -2,9 +2,11 @@ package hexlet.code.service;
 
 import hexlet.code.dto.TaskStatusDto;
 import hexlet.code.model.TaskStatus;
+import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -14,6 +16,7 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class TaskStatusServiceImpl implements TaskStatusService {
     private final TaskStatusRepository taskStatusRepository;
+    private final TaskRepository taskRepository;
 
     @Override
     public TaskStatus createNew(TaskStatusDto taskStatusDto) {
@@ -33,6 +36,11 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     @Override
     public void deleteById(Long id) {
         checkExisting(id);
+        if (!taskRepository.existsByStatus(taskStatusRepository.findById(id).get())) {
+            taskStatusRepository.deleteById(id);
+        } else {
+            throw new DataIntegrityViolationException("There are tasks with a deleted status");
+        }
         taskStatusRepository.deleteById(id);
     }
 

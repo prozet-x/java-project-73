@@ -20,6 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import static hexlet.code.controller.TaskStatusController.STATUS_CONTROLLER_PATH;
+import static hexlet.code.controller.UserController.USER_CONTROLLER_PATH;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import java.util.List;
 
@@ -186,15 +189,14 @@ public class TaskControllerIT {
 
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
-
         TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, userId);
-        testUtils.addTaskUnderUser(taskDto, defaultUser1);
 
+        testUtils.addTaskUnderUser(taskDto, defaultUser1);
         assertThat(taskRepository.count()).isEqualTo(1);
 
         Long id = taskRepository.findAll().get(0).getId();
-        MockHttpServletRequestBuilder req = delete(TASK_CONTROLLER_PATH + ID_PATH_VAR, id);
 
+        MockHttpServletRequestBuilder req = delete(TASK_CONTROLLER_PATH + ID_PATH_VAR, id);
         testUtils.performWithoutToken(req)
                 .andExpect(status().isForbidden());
         assertThat(taskRepository.count()).isEqualTo(1);
@@ -203,6 +205,14 @@ public class TaskControllerIT {
         testUtils.performWithToken(reqForDeletingUnderOtherUser, defaultUser2)
                 .andExpect(status().isForbidden());
         assertThat(taskRepository.count()).isEqualTo(1);
+
+        MockHttpServletRequestBuilder reqForDeletingUser = delete(USER_CONTROLLER_PATH + ID_PATH_VAR, userId);
+        testUtils.performWithToken(reqForDeletingUser, defaultUser1)
+                        .andExpect(status().isUnprocessableEntity());
+
+        MockHttpServletRequestBuilder reqForDeletingTaskStatus = delete(STATUS_CONTROLLER_PATH + ID_PATH_VAR, taskStatusId);
+        testUtils.performWithToken(reqForDeletingTaskStatus, defaultUser1)
+                .andExpect(status().isUnprocessableEntity());
 
         testUtils.performWithToken(req, defaultUser1)
                 .andExpect(status().isOk());

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,6 +35,9 @@ public class Task {
 
     @ManyToOne
     private User executor;
+
+    @ManyToMany
+    private List<Label> label;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

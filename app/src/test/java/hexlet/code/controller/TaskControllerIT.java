@@ -3,8 +3,8 @@ package hexlet.code.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.config.SpringConfigForIT;
 import hexlet.code.dto.TaskDto;
-import hexlet.code.dto.UserDto;
 import hexlet.code.model.Task;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -20,12 +20,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
+import java.util.List;
 import static hexlet.code.controller.TaskStatusController.STATUS_CONTROLLER_PATH;
 import static hexlet.code.controller.UserController.USER_CONTROLLER_PATH;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -51,10 +49,14 @@ public class TaskControllerIT {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
+    @Autowired
+    private LabelRepository labelRepository;
+
     @BeforeEach
     void beforeEach() throws Exception {
         testUtils.addUser(defaultUser1);
         testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
+        testUtils.addLabelUnderUser(defaultLabel, defaultUser1);
     }
 
     @AfterEach
@@ -64,9 +66,11 @@ public class TaskControllerIT {
 
     @Test
     void testCreateTask() throws Exception {
+        //Во многих тестах подготовительный этап одинаков. Вынести его в отдельный метод
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
-        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, userId);
+        List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, userId, labelsIds);
 
         assertEquals(taskRepository.count(), 0);
 
@@ -81,8 +85,9 @@ public class TaskControllerIT {
         assertThat(task.getAuthor().getId()).isEqualTo(taskDto.getAuthorId());
         assertThat(task.getExecutor().getId()).isEqualTo(taskDto.getExecutorId());
         assertThat(task.getStatus().getId()).isEqualTo(taskDto.getStatusId());
+        assertThat(task.getLabels().get(0).getName()).isEqualTo(taskDto.getLabels().get(0));
 
-        TaskDto taskDtoBadName = new TaskDto("", "k", taskStatusId, userId, userId);
+        TaskDto taskDtoBadName = new TaskDto("", "k", taskStatusId, userId, userId, labelsIds);
         testUtils.addTaskUnderUser(taskDtoBadName, defaultUser1)
                 .andExpect(status().isUnprocessableEntity());
 
@@ -94,7 +99,8 @@ public class TaskControllerIT {
     void testGeTasksById() throws Exception {
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
-        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, userId);
+        List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, userId, labelsIds);
         testUtils.addTaskUnderUser(taskDto, defaultUser1);
         Long id = taskRepository.findAll().get(0).getId();
 
@@ -113,7 +119,7 @@ public class TaskControllerIT {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        Task taskUnauthorized = fromJSON(taskAsJSON, new TypeReference<Task>() {});
+        Task taskUnauthorized = fromJSON(taskAsJSONUnauthorized, new TypeReference<Task>() {});
         assertThat(taskUnauthorized.getName()).isEqualTo(TASK_DEFAULT_NAME);
         assertThat(taskUnauthorized.getDescr()).isEqualTo(TASK_DEFAULT_DESC);
     }
@@ -125,9 +131,10 @@ public class TaskControllerIT {
         Long userId1 = userRepository.findAll().get(0).getId();
         Long userId2 = userRepository.findAll().get(1).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
+        List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
 
-        TaskDto taskDto1 = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId1, userId2);
-        TaskDto taskDto2 = new TaskDto("taskName2", "taskDesc2", taskStatusId, userId2, userId1);
+        TaskDto taskDto1 = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId1, userId2, labelsIds);
+        TaskDto taskDto2 = new TaskDto("taskName2", "taskDesc2", taskStatusId, userId2, userId1, labelsIds);
 
         testUtils.addTaskUnderUser(taskDto1, defaultUser1);
         testUtils.addTaskUnderUser(taskDto2, defaultUser2);
@@ -158,11 +165,12 @@ public class TaskControllerIT {
         Long userId1 = userRepository.findAll().get(0).getId();
         Long userId2 = userRepository.findAll().get(1).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
+        List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId1, userId1, labelsIds);
 
-        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId1, userId1);
         testUtils.addTaskUnderUser(taskDto, defaultUser1);
         Long id = taskRepository.findAll().get(0).getId();
-        TaskDto taskDtoForUpdate = new TaskDto("taskNameUpdated", "taskDescUpdated", taskStatusId, userId2, userId2);
+        TaskDto taskDtoForUpdate = new TaskDto("taskNameUpdated", "taskDescUpdated", taskStatusId, userId2, userId2, labelsIds);
 
         MockHttpServletRequestBuilder req = put(TASK_CONTROLLER_PATH + ID_PATH_VAR, id)
                 .content(toJSON(taskDtoForUpdate))
@@ -189,7 +197,8 @@ public class TaskControllerIT {
 
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
-        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, userId);
+        List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, userId, labelsIds);
 
         testUtils.addTaskUnderUser(taskDto, defaultUser1);
         assertThat(taskRepository.count()).isEqualTo(1);

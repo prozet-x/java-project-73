@@ -43,7 +43,7 @@ public class LabelServiceImpl implements LabelService {
         if (!labelRepository.existsById(id)) {
             throw new NoSuchElementException(String.format("Label with id %d not found", id));
         }
-        if (!taskRepository.existsByLabel(labelRepository.findById(id).get())) {
+        if (!taskRepository.existsByLabelsIsContaining(labelRepository.findById(id).get())) {
             labelRepository.deleteById(id);
         } else {
             throw new DataIntegrityViolationException("There are tasks in which this label is used");

@@ -10,6 +10,8 @@ import hexlet.code.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -53,5 +55,6 @@ public class TaskServiceImpl implements TaskService{
         task.setDescr(taskDto.getDescr());
         task.setExecutor(userRepository.findById(taskDto.getExecutorId()).get());
         task.setStatus(taskStatusRepository.findById(taskDto.getStatusId()).get());
+        task.setLabels(List.copyOf(taskDto.getLabels()));
     }
 }

@@ -37,7 +37,7 @@ public class Task {
     private User executor;
 
     @ManyToMany
-    private List<Label> label;
+    private List<Label> labels;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     boolean existsByAuthor(User user);
     boolean existsByStatus(TaskStatus status);
-    boolean existsByLabel(Label label);
+    boolean existsByLabelsIsContaining(Label label);
 }

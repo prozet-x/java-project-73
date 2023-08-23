@@ -1,12 +1,16 @@
 package hexlet.code.utils;
 
+import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import hexlet.code.dto.LabelDto;
 import hexlet.code.dto.TaskDto;
 import hexlet.code.dto.TaskStatusDto;
 import hexlet.code.dto.UserDto;
+import hexlet.code.model.Label;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -19,6 +23,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import hexlet.code.component.JWTHelper;
 
+import static hexlet.code.controller.LabelController.LABEL_CONTROLLER_PATH;
 import static hexlet.code.controller.TaskController.TASK_CONTROLLER_PATH;
 import static hexlet.code.controller.TaskStatusController.STATUS_CONTROLLER_PATH;
 import static hexlet.code.controller.UserController.USER_CONTROLLER_PATH;
@@ -44,10 +49,14 @@ public class TestUtils {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LabelRepository labelRepository;
+
     public static final UserDto defaultUser1 = new UserDto("defFirstName1", "defLastName1", "def1@email.com", "defPassword1");
     public static final UserDto defaultUser2 = new UserDto("defFirstName2", "defLastName2", "def2@email.com", "defPassword2");
     public static final TaskStatusDto defaultTaskStatus1 = new TaskStatusDto("status1");
     public static final TaskStatusDto defaultTaskStatus2 = new TaskStatusDto("status2");
+    public static final LabelDto defaultLabel = new LabelDto("defLabel");
 
     public static final String TASK_DEFAULT_NAME = "defTaskName";
     public static final String TASK_DEFAULT_DESC = "defTaskDesc";
@@ -64,8 +73,18 @@ public class TestUtils {
         return performWithoutToken(creationReq);
     }
 
+    public ResultActions addLabelUnderUser(LabelDto labelDto, UserDto userDto) throws Exception {
+        String labelAsJSON = toJSON(labelDto);
+
+        MockHttpServletRequestBuilder creationReq = post(LABEL_CONTROLLER_PATH)
+                .content(labelAsJSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        return performWithToken(creationReq, userDto);
+    }
+
     public ResultActions addTaskStatusUnderUser(TaskStatusDto taskStatusDto, UserDto userDto) throws Exception {
-        String taskStatusDtoAsJSONString = mapper.writeValueAsString(taskStatusDto);
+        String taskStatusDtoAsJSONString = toJSON(taskStatusDto);
 
         MockHttpServletRequestBuilder creationReq = post(STATUS_CONTROLLER_PATH)
                 .content(taskStatusDtoAsJSONString)
@@ -88,10 +107,11 @@ public class TestUtils {
         return performWithoutToken(req);
     }
 
-    public TaskDto fillTaskDto(TaskDto taskDto, Long statusId, Long authorId, Long executorId) {
+    public TaskDto fillTaskDto(TaskDto taskDto, Long statusId, Long authorId, Long executorId, List<Long> labels) {
         taskDto.setStatusId(statusId);;
         taskDto.setExecutorId(executorId);
         taskDto.setAuthorId(authorId);
+        taskDto.setLabels(List.copyOf(labels));
         return taskDto;
     }
 
@@ -106,6 +126,7 @@ public class TestUtils {
         taskRepository.deleteAll();
         userRepository.deleteAll();
         taskStatusRepository.deleteAll();
+        labelRepository.deleteAll();
     }
 
     public ResultActions performWithToken(MockHttpServletRequestBuilder req, UserDto userDto) throws Exception {

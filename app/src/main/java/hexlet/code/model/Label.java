@@ -10,7 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
-@Entity
+@Entity(name = "labels")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

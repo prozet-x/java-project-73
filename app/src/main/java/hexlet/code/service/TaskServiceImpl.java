@@ -2,8 +2,10 @@ package hexlet.code.service;
 
 import hexlet.code.dto.TaskDto;
 import hexlet.code.dto.TaskStatusDto;
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -21,6 +24,7 @@ public class TaskServiceImpl implements TaskService{
     private TaskRepository taskRepository;
     private UserRepository userRepository;
     private TaskStatusRepository taskStatusRepository;
+    private LabelRepository labelRepository;
 
     @Override
     public Task createNew(TaskDto taskDto) {
@@ -55,6 +59,18 @@ public class TaskServiceImpl implements TaskService{
         task.setDescr(taskDto.getDescr());
         task.setExecutor(userRepository.findById(taskDto.getExecutorId()).get());
         task.setStatus(taskStatusRepository.findById(taskDto.getStatusId()).get());
-        task.setLabels(List.copyOf(taskDto.getLabels()));
+        task.setLabels(getLabelsFromListOfLabelsIds(taskDto.getLabels()));
+    }
+
+//    private List<Long> getIdsOfLabelsByLabels(List<Label> labels) {
+//        return labels.stream()
+//                .map(label -> label.getId())
+//                .collect(Collectors.toList());
+//    }
+
+    private List<Label> getLabelsFromListOfLabelsIds(List<Long> ids) {
+        return ids.stream()
+                .map(id -> labelRepository.findById(id).get())
+                .collect(Collectors.toList());
     }
 }

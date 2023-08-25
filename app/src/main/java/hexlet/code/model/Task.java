@@ -36,7 +36,7 @@ public class Task {
     @ManyToOne
     private User executor;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Label> labels;
 
     @CreationTimestamp

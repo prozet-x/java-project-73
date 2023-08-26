@@ -43,11 +43,6 @@ public class LabelControllerIT {
     @Autowired
     private LabelRepository labelRepository;
 
-//    @BeforeEach
-//    void beforeEach() throws Exception {
-//        addDefaultLabel();
-//    }
-
     @AfterEach
     void clearBase() {
         testUtils.clear();
@@ -89,8 +84,14 @@ public class LabelControllerIT {
         addLabel(defaultLabel);
         Long id = labelRepository.findAll().get(0).getId();
 
-        MockHttpServletRequestBuilder req = get(LABEL_CONTROLLER_PATH + ID, id);
-        String labelAsString = testUtils.performWithoutToken(req)
+        MockHttpServletRequestBuilder reqBad = get(LABEL_CONTROLLER_PATH + ID, id + 1);
+        testUtils.performWithToken(reqBad, defaultUser1)
+                .andExpect(status().isNotFound());
+
+        MockHttpServletRequestBuilder reqGood = get(LABEL_CONTROLLER_PATH + ID, id);
+        testUtils.performWithoutToken(reqGood)
+                .andExpect(status().isForbidden());
+        String labelAsString = testUtils.performWithToken(reqGood, defaultUser1)
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -106,7 +107,10 @@ public class LabelControllerIT {
         assertEquals(labelRepository.count(), 2);
 
         MockHttpServletRequestBuilder req = get(LABEL_CONTROLLER_PATH);
-        String labelsAsString = testUtils.performWithoutToken(req)
+        testUtils.performWithoutToken(req)
+                .andExpect(status().isForbidden());
+
+        String labelsAsString = testUtils.performWithToken(req, defaultUser1)
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -129,7 +133,33 @@ public class LabelControllerIT {
                 .andExpect(status().isOk());
         assertEquals(labelRepository.findAll().get(0).getName(), newName);
 
-        //TEST TO UPDATE LABEL WITHOUT AUTHORIZATION
+        String newNameAgain = "newNameAgain";
+        LabelDto labelDtoAgain = new LabelDto(newNameAgain);
+        MockHttpServletRequestBuilder reqAgain = put(LABEL_CONTROLLER_PATH + ID, id)
+                .content(toJSON(labelDtoAgain))
+                .contentType(MediaType.APPLICATION_JSON);
+        testUtils.performWithoutToken(reqAgain)
+                .andExpect(status().isForbidden());
+        assertEquals(labelRepository.findAll().get(0).getName(), newName);
+    }
+
+    @Test
+    void testDelete() throws Exception {
+        addLabel(defaultLabel);
+        assertEquals(labelRepository.count(), 1);
+
+        Long id = labelRepository.findAll().get(0).getId();
+        MockHttpServletRequestBuilder reqBad = delete(LABEL_CONTROLLER_PATH + ID, id + 1);
+        testUtils.performWithToken(reqBad, defaultUser1)
+                .andExpect(status().isNotFound());
+
+        MockHttpServletRequestBuilder reqGood = delete(LABEL_CONTROLLER_PATH + ID, id);
+        testUtils.performWithoutToken(reqGood)
+                .andExpect(status().isForbidden());
+        testUtils.performWithToken(reqGood, defaultUser1)
+                .andExpect(status().isOk());
+
+        assertEquals(labelRepository.count(), 0);
     }
 
     private void addLabel(LabelDto labelDto) throws Exception {

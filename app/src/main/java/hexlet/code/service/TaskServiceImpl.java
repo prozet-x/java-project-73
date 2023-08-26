@@ -62,12 +62,6 @@ public class TaskServiceImpl implements TaskService{
         task.setLabels(getLabelsFromListOfLabelsIds(taskDto.getLabels()));
     }
 
-//    private List<Long> getIdsOfLabelsByLabels(List<Label> labels) {
-//        return labels.stream()
-//                .map(label -> label.getId())
-//                .collect(Collectors.toList());
-//    }
-
     private List<Label> getLabelsFromListOfLabelsIds(List<Long> ids) {
         return ids.stream()
                 .map(id -> labelRepository.findById(id).get())

@@ -65,7 +65,7 @@ public class SecurityConfig {
                 new AntPathRequestMatcher(baseUrl + USER_CONTROLLER_PATH, POST.toString()),
                 new AntPathRequestMatcher(baseUrl + USER_CONTROLLER_PATH, GET.toString()),
                 new AntPathRequestMatcher(baseUrl + STATUS_CONTROLLER_PATH + "/**", GET.toString()),
-                new AntPathRequestMatcher(baseUrl + LABEL_CONTROLLER_PATH + "/**", GET.toString()),
+                //new AntPathRequestMatcher(baseUrl + LABEL_CONTROLLER_PATH + "/**", GET.toString()),
                 new NegatedRequestMatcher(new AntPathRequestMatcher(baseUrl + "/**"))
         );
     }

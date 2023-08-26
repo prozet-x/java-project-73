@@ -59,7 +59,7 @@ public class TaskStatusControllerIT {
         testUtils.performWithoutToken(req).andExpect(status().isForbidden());
         assertEquals(taskStatusRepository.count(), 0);
 
-        testUtils.performWithToken(req, defaultUser1).andExpect(status().isOk());
+        testUtils.performWithToken(req, defaultUser1).andExpect(status().isCreated());
         assertEquals(taskStatusRepository.count(), 1);
 
         String nameOfSavedStatus = taskStatusRepository.findAll().get(0).getName();

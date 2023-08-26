@@ -6,6 +6,7 @@ import hexlet.code.repository.LabelRepository;
 import hexlet.code.service.LabelService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class LabelController {
     private LabelService labelService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Label createNew(@RequestBody @Valid final LabelDto labelDto) {
         return labelService.createNew(labelDto);
     }
@@ -37,7 +39,7 @@ public class LabelController {
     }
 
     @PutMapping(ID)
-    public Label update(@RequestBody @Valid final LabelDto labelDto, @PathVariable final Long id) {
+    public Label update(@RequestBody @Valid final LabelDto labelDto, @PathVariable final long id) {
         return labelService.update(labelDto, id);
     }
 

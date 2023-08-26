@@ -6,6 +6,7 @@ import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.service.TaskStatusService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,12 +33,13 @@ public class TaskStatusController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public TaskStatus createNew(@RequestBody @Valid TaskStatusDto taskStatusDto) {
         return taskStatusService.createNew(taskStatusDto);
     }
 
     @PutMapping(ID)
-    public TaskStatus update(@RequestBody @Valid TaskStatusDto taskStatusDto, @PathVariable final long id) {
+    public TaskStatus update(@RequestBody @Valid final TaskStatusDto taskStatusDto, @PathVariable final long id) {
         return taskStatusService.update(taskStatusDto, id);
     }
 

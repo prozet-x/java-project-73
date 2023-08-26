@@ -36,17 +36,16 @@ public class LabelServiceImpl implements LabelService {
     @Override
     public void deleteById(Long id) {
         checkExistingById(id);
-        labelRepository.deleteById(id);
+        if (!taskRepository.existsByLabelsIsContaining(labelRepository.findById(id).get())) {
+            labelRepository.deleteById(id);
+        } else {
+            throw new DataIntegrityViolationException("There are tasks in which this label is used");
+        }
     }
 
     private void checkExistingById(final Long id) {
         if (!labelRepository.existsById(id)) {
             throw new NoSuchElementException(String.format("Label with id %d not found", id));
-        }
-        if (!taskRepository.existsByLabelsIsContaining(labelRepository.findById(id).get())) {
-            labelRepository.deleteById(id);
-        } else {
-            throw new DataIntegrityViolationException("There are tasks in which this label is used");
         }
     }
 }

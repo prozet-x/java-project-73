@@ -75,7 +75,7 @@ public class TaskControllerIT {
         assertEquals(taskRepository.count(), 0);
 
         testUtils.addTaskUnderUser(taskDto, defaultUser1)
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         assertEquals(taskRepository.count(), 1);
 
@@ -85,7 +85,7 @@ public class TaskControllerIT {
         assertThat(task.getAuthor().getId()).isEqualTo(taskDto.getAuthorId());
         assertThat(task.getExecutor().getId()).isEqualTo(taskDto.getExecutorId());
         assertThat(task.getStatus().getId()).isEqualTo(taskDto.getStatusId());
-        assertThat(task.getLabels().get(0).getName()).isEqualTo(taskDto.getLabels().get(0));
+        assertThat(task.getLabels().get(0).getName()).isEqualTo(defaultLabel.getName());
 
         TaskDto taskDtoBadName = new TaskDto("", "k", taskStatusId, userId, userId, labelsIds);
         testUtils.addTaskUnderUser(taskDtoBadName, defaultUser1)

@@ -23,11 +23,11 @@ public class Task {
     @NotBlank
     private String name;
 
-    private String descr;
+    private String description;
 
     @ManyToOne
     @NotNull
-    private TaskStatus status;
+    private TaskStatus taskStatus;
 
     @ManyToOne
     @NotNull

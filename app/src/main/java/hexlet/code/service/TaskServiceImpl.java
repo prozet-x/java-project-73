@@ -1,10 +1,8 @@
 package hexlet.code.service;
 
 import hexlet.code.dto.TaskDto;
-import hexlet.code.dto.TaskStatusDto;
 import hexlet.code.model.Label;
 import hexlet.code.model.Task;
-import hexlet.code.model.TaskStatus;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
@@ -56,9 +54,9 @@ public class TaskServiceImpl implements TaskService{
     private void setTaskFromTaskDto(final Task task, final TaskDto taskDto) {
         task.setName(taskDto.getName());
         task.setAuthor(userRepository.findById(taskDto.getAuthorId()).get());
-        task.setDescr(taskDto.getDescr());
+        task.setDescription(taskDto.getDescr());
         task.setExecutor(userRepository.findById(taskDto.getExecutorId()).get());
-        task.setStatus(taskStatusRepository.findById(taskDto.getStatusId()).get());
+        task.setTaskStatus(taskStatusRepository.findById(taskDto.getTaskStatusId()).get());
         task.setLabels(getLabelsFromListOfLabelsIds(taskDto.getLabels()));
     }
 

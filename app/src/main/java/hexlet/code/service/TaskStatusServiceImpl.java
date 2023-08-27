@@ -36,7 +36,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
     @Override
     public void deleteById(Long id) {
         checkExisting(id);
-        if (!taskRepository.existsByStatus(taskStatusRepository.findById(id).get())) {
+        if (!taskRepository.existsByTaskStatus(taskStatusRepository.findById(id).get())) {
             taskStatusRepository.deleteById(id);
         } else {
             throw new DataIntegrityViolationException("There are tasks with a deleted status");

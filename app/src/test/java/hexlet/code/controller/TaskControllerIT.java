@@ -81,10 +81,10 @@ public class TaskControllerIT {
 
         Task task = taskRepository.findAll().get(0);
         assertThat(task.getName()).isEqualTo(taskDto.getName());
-        assertThat(task.getDescr()).isEqualTo(taskDto.getDescr());
+        assertThat(task.getDescription()).isEqualTo(taskDto.getDescr());
         assertThat(task.getAuthor().getId()).isEqualTo(taskDto.getAuthorId());
         assertThat(task.getExecutor().getId()).isEqualTo(taskDto.getExecutorId());
-        assertThat(task.getStatus().getId()).isEqualTo(taskDto.getStatusId());
+        assertThat(task.getTaskStatus().getId()).isEqualTo(taskDto.getTaskStatusId());
         assertThat(task.getLabels().get(0).getName()).isEqualTo(defaultLabel.getName());
 
         TaskDto taskDtoBadName = new TaskDto("", "k", taskStatusId, userId, userId, labelsIds);
@@ -112,7 +112,7 @@ public class TaskControllerIT {
                 .getContentAsString();
         Task task = fromJSON(taskAsJSON, new TypeReference<Task>() {});
         assertThat(task.getName()).isEqualTo(TASK_DEFAULT_NAME);
-        assertThat(task.getDescr()).isEqualTo(TASK_DEFAULT_DESC);
+        assertThat(task.getDescription()).isEqualTo(TASK_DEFAULT_DESC);
 
         String taskAsJSONUnauthorized = testUtils.performWithoutToken(req)
                 .andExpect(status().isOk())
@@ -121,7 +121,7 @@ public class TaskControllerIT {
                 .getContentAsString();
         Task taskUnauthorized = fromJSON(taskAsJSONUnauthorized, new TypeReference<Task>() {});
         assertThat(taskUnauthorized.getName()).isEqualTo(TASK_DEFAULT_NAME);
-        assertThat(taskUnauthorized.getDescr()).isEqualTo(TASK_DEFAULT_DESC);
+        assertThat(taskUnauthorized.getDescription()).isEqualTo(TASK_DEFAULT_DESC);
     }
 
     @Test
@@ -180,7 +180,7 @@ public class TaskControllerIT {
 
         Task updatedTask = taskRepository.findAll().get(0);
         assertThat(updatedTask.getName()).isEqualTo(taskDtoForUpdate.getName());
-        assertThat(updatedTask.getDescr()).isEqualTo(taskDtoForUpdate.getDescr());
+        assertThat(updatedTask.getDescription()).isEqualTo(taskDtoForUpdate.getDescr());
         assertThat(updatedTask.getAuthor().getId()).isEqualTo(userId2);
         assertThat(updatedTask.getExecutor().getId()).isEqualTo(userId2);
 

@@ -20,7 +20,7 @@ public class TaskDto {
     private String descr;
 
     @NotNull
-    private Long statusId;
+    private Long taskStatusId;
 
     @NotNull
     private Long authorId;

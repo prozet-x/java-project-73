@@ -108,7 +108,7 @@ public class TestUtils {
     }
 
     public TaskDto fillTaskDto(TaskDto taskDto, Long statusId, Long authorId, Long executorId, List<Long> labels) {
-        taskDto.setStatusId(statusId);;
+        taskDto.setTaskStatusId(statusId);;
         taskDto.setExecutorId(executorId);
         taskDto.setAuthorId(authorId);
         taskDto.setLabels(List.copyOf(labels));

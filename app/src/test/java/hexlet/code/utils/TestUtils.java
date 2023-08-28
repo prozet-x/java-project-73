@@ -111,14 +111,14 @@ public class TestUtils {
         taskDto.setTaskStatusId(statusId);;
         taskDto.setExecutorId(executorId);
         taskDto.setAuthorId(authorId);
-        taskDto.setLabels(List.copyOf(labels));
+        taskDto.setLabelIds(List.copyOf(labels));
         return taskDto;
     }
 
     public TaskDto getDefaultTaskDto() {
         TaskDto taskDto = new TaskDto();
         taskDto.setName(TASK_DEFAULT_NAME);
-        taskDto.setDescr(TASK_DEFAULT_DESC);
+        taskDto.setDescription(TASK_DEFAULT_DESC);
         return taskDto;
     }
 

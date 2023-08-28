@@ -17,15 +17,14 @@ public class TaskDto {
     @Size(min = 1)
     private String name;
 
-    private String descr;
+    private String description;
 
     @NotNull
     private Long taskStatusId;
 
-    @NotNull
     private Long authorId;
 
     private Long executorId;
 
-    private List<Long> labels;
+    private List<Long> labelIds;
 }

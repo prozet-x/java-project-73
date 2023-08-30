@@ -58,12 +58,10 @@ public class TaskControllerIT {
         testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
         testUtils.addLabelUnderUser(defaultLabel, defaultUser1);
     }
-
     @AfterEach
     void clearBase() {
         testUtils.clear();
     }
-
     @Test
     void testCreateTask() throws Exception {
         //Во многих тестах подготовительный этап одинаков. Вынести его в отдельный метод
@@ -94,7 +92,6 @@ public class TaskControllerIT {
         testUtils.addTaskUnauthorized(taskDtoBadName)
                 .andExpect(status().isForbidden());
     }
-
     @Test
     void testGeTasksById() throws Exception {
         Long userId = userRepository.findAll().get(0).getId();
@@ -123,7 +120,6 @@ public class TaskControllerIT {
         assertThat(taskUnauthorized.getName()).isEqualTo(TASK_DEFAULT_NAME);
         assertThat(taskUnauthorized.getDescription()).isEqualTo(TASK_DEFAULT_DESC);
     }
-
     @Test
     void testGetAllTasks() throws Exception {
         testUtils.addUser(defaultUser2);
@@ -148,7 +144,7 @@ public class TaskControllerIT {
         List<Task> tasks = fromJSON(tasksAsJSON, new TypeReference<List<Task>>(){});
         assertThat(tasks).hasSize(2);
 
-        String tasksAsJSONUnauthorized = testUtils.performWithoutToken(req)
+        testUtils.performWithoutToken(req)
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -157,7 +153,6 @@ public class TaskControllerIT {
         List<Task> tasksUnauthorized = fromJSON(tasksAsJSON, new TypeReference<List<Task>>(){});
         assertThat(tasksUnauthorized).hasSize(2);
     }
-
     @Test
     void testUpdateTask() throws Exception {
         testUtils.addUser(defaultUser2);
@@ -192,7 +187,6 @@ public class TaskControllerIT {
         testUtils.performWithoutToken(reqUnauthorized)
                 .andExpect(status().isForbidden());
     }
-
     @Test
     void testDeleteTask() throws Exception {
         assertThat(taskRepository.count()).isEqualTo(0);

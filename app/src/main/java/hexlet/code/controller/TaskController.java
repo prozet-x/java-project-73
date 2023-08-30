@@ -40,7 +40,6 @@ public class TaskController {
     @GetMapping
     public List<Task> getAll(@QuerydslPredicate(root = Task.class) Predicate predicate, @PageableDefault Pageable pageable) {
         return taskRepository.findAll(predicate, pageable).getContent();
-        //return taskRepository.findAll();
     }
 
     @PostMapping

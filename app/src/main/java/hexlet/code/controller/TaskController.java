@@ -11,11 +11,8 @@ import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import static hexlet.code.controller.TaskController.TASK_CONTROLLER_PATH;
@@ -45,7 +42,6 @@ public class TaskController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Task createNew(@RequestBody final @Valid TaskDto taskDto) {
-//        SecurityContextHolder.getContext().getAuthentication()
         return taskService.createNew(taskDto);
     }
 

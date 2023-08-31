@@ -2,6 +2,7 @@ package hexlet.code.repository;
 
 import com.querydsl.core.types.dsl.StringPath;
 import hexlet.code.model.*;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;

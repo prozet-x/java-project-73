@@ -88,11 +88,7 @@ public class TaskStatusControllerIT {
         Long id = taskStatusRepository.findAll().get(0).getId();
         MockHttpServletRequestBuilder req = get(STATUS_CONTROLLER_PATH + ID_PATH_VAR, id);
 
-        String respAsString = testUtils.performWithoutToken(req)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        String respAsString = testUtils.getPerfomUnauthorizedResultAsString(req);
         TaskStatus taskStatus = fromJSON(respAsString, new TypeReference<>(){});
         assertEquals(taskStatus.getName(), defaultTaskStatus1.getName());
     }
@@ -103,12 +99,7 @@ public class TaskStatusControllerIT {
         testUtils.addTaskStatusUnderUser(defaultTaskStatus2, defaultUser1);
 
         MockHttpServletRequestBuilder req = get(STATUS_CONTROLLER_PATH);
-        String respAsString = testUtils.performWithoutToken(req)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
+        String respAsString = testUtils.getPerfomUnauthorizedResultAsString(req);
         List<TaskStatus> list = fromJSON(respAsString, new TypeReference<>() {});
         assertThat(list).hasSize(2);
     }
@@ -126,12 +117,7 @@ public class TaskStatusControllerIT {
 
         testUtils.performWithoutToken(req).andExpect(status().isForbidden());
 
-        String updatedTaskStatusAsString = testUtils.performWithToken(req, defaultUser1)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
+        String updatedTaskStatusAsString = testUtils.getPerfomAuthorizedResultAsString(req, defaultUser1);
         TaskStatus updatedTaskStatus = fromJSON(updatedTaskStatusAsString, new TypeReference<>(){});
         assertThat(updatedTaskStatus.getName()).isEqualTo(taskStatusNew.getName());
     }

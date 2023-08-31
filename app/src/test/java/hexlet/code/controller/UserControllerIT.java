@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -95,13 +94,8 @@ public class UserControllerIT {
         Long id = userRepository.findByEmail(defaultUser1.getEmail()).get().getId();
 
         MockHttpServletRequestBuilder req =  get(USER_CONTROLLER_PATH + ID_PATH_VAR, id);
-
-        MockHttpServletResponse resp = testUtils.performWithToken(req, defaultUser2)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse();
-
-        User user = fromJSON(resp.getContentAsString(), new TypeReference<>() {
+        String resultAsJSON = testUtils.getPerfomAuthorizedResultAsString(req, defaultUser2);
+        User user = fromJSON(resultAsJSON, new TypeReference<>() {
         });
 
         assertEquals(defaultUser1.getEmail(), user.getEmail());
@@ -123,13 +117,8 @@ public class UserControllerIT {
         testUtils.addUser(defaultUser2);
 
         MockHttpServletRequestBuilder req = get(USER_CONTROLLER_PATH);
-
-        MockHttpServletResponse resp = testUtils.performWithoutToken(req)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse();
-
-        List<User> users = fromJSON(resp.getContentAsString(), new TypeReference<>(){});
+        String resultAsJSON = testUtils.getPerfomUnauthorizedResultAsString(req);
+        List<User> users = fromJSON(resultAsJSON, new TypeReference<>(){});
         assertThat(users).hasSize(2);
     }
 

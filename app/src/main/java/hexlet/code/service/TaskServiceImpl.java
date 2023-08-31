@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -27,8 +26,8 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     public Task createNew(TaskDto taskDto) {
-        String emailOfCutrUser = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long idOfCurrentUser = userRepository.findByEmail(emailOfCutrUser).get().getId();
+        String emailOfCurUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long idOfCurrentUser = userRepository.findByEmail(emailOfCurUser).get().getId();
         final Task task = new Task();
         taskDto.setAuthorId(idOfCurrentUser);
         setTaskFromTaskDto(task, taskDto);

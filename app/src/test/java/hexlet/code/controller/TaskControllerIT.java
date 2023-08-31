@@ -2,8 +2,13 @@ package hexlet.code.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.config.SpringConfigForIT;
+import hexlet.code.dto.LabelDto;
 import hexlet.code.dto.TaskDto;
+import hexlet.code.dto.TaskStatusDto;
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
+import hexlet.code.model.TaskStatus;
+import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
@@ -59,16 +64,15 @@ public class TaskControllerIT {
         testUtils.addLabelUnderUser(defaultLabel, defaultUser1);
     }
     @AfterEach
-    void clearBase() {
+    void afterEach() {
         testUtils.clear();
     }
     @Test
     void testCreateTask() throws Exception {
-        //Во многих тестах подготовительный этап одинаков. Вынести его в отдельный метод
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
-        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, null, userId, labelsIds);
+        TaskDto taskDto = testUtils.fillTaskDto(defaultTaskDto, taskStatusId, userId, labelsIds);
 
         assertEquals(taskRepository.count(), 0);
 
@@ -97,25 +101,17 @@ public class TaskControllerIT {
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
-        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, null, userId, labelsIds);
+        TaskDto taskDto = testUtils.fillTaskDto(defaultTaskDto, taskStatusId, userId, labelsIds);
         testUtils.addTaskUnderUser(taskDto, defaultUser1);
         Long id = taskRepository.findAll().get(0).getId();
 
         MockHttpServletRequestBuilder req = get(TASK_CONTROLLER_PATH + ID_PATH_VAR, id);
-        String taskAsJSON = testUtils.performWithToken(req, defaultUser1)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        String taskAsJSON = testUtils.getPerfomAuthorizedResultAsString(req, defaultUser1);
         Task task = fromJSON(taskAsJSON, new TypeReference<Task>() {});
         assertThat(task.getName()).isEqualTo(TASK_DEFAULT_NAME);
         assertThat(task.getDescription()).isEqualTo(TASK_DEFAULT_DESC);
 
-        String taskAsJSONUnauthorized = testUtils.performWithoutToken(req)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        String taskAsJSONUnauthorized = testUtils.getPerfomUnauthorizedResultAsString(req);
         Task taskUnauthorized = fromJSON(taskAsJSONUnauthorized, new TypeReference<Task>() {});
         assertThat(taskUnauthorized.getName()).isEqualTo(TASK_DEFAULT_NAME);
         assertThat(taskUnauthorized.getDescription()).isEqualTo(TASK_DEFAULT_DESC);
@@ -129,30 +125,63 @@ public class TaskControllerIT {
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
 
-        TaskDto taskDto1 = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, null, userId2, labelsIds);
-        TaskDto taskDto2 = new TaskDto("taskName2", "taskDesc2", taskStatusId, null, userId1, labelsIds);
+        TaskDto taskDto1 = testUtils.fillTaskDto(defaultTaskDto, taskStatusId, userId2, labelsIds);
+        TaskDto taskDto2 = new TaskDto("taskName2", "taskDesc2", taskStatusId, userId1, labelsIds);
 
         testUtils.addTaskUnderUser(taskDto1, defaultUser1);
         testUtils.addTaskUnderUser(taskDto2, defaultUser2);
 
         MockHttpServletRequestBuilder req = get(TASK_CONTROLLER_PATH);
-        String tasksAsJSON = testUtils.performWithToken(req, defaultUser1)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        String tasksAsJSON = testUtils.getPerfomAuthorizedResultAsString(req, defaultUser1);
         List<Task> tasks = fromJSON(tasksAsJSON, new TypeReference<List<Task>>(){});
         assertThat(tasks).hasSize(2);
 
-        testUtils.performWithoutToken(req)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
+        testUtils.getPerfomUnauthorizedResultAsString(req);
         List<Task> tasksUnauthorized = fromJSON(tasksAsJSON, new TypeReference<List<Task>>(){});
         assertThat(tasksUnauthorized).hasSize(2);
     }
+
+    @Test
+    void testFilteredGettingTasks() throws Exception {
+        testUtils.addUser(defaultUser2);
+        testUtils.addLabelUnderUser(new LabelDto("label 2"), defaultUser1);
+        testUtils.addTaskStatusUnderUser(new TaskStatusDto("status 2"), defaultUser1);
+
+        List<User> users = userRepository.findAll();
+        Long userId1 = users.get(0).getId();
+        Long userId2 = users.get(1).getId();
+        List<Label> labels = labelRepository.findAll();
+        Long labelId1 = labels.get(0).getId();
+        Long labelId2 = labels.get(1).getId();
+        List<TaskStatus> statuses = taskStatusRepository.findAll();
+        Long taskStatusId1 = statuses.get(0).getId();
+        Long taskStatusId2 = statuses.get(1).getId();
+        TaskDto taskDto1 = new TaskDto("taskName1", "taskDesc1", taskStatusId1, userId1, List.of(labelId1));
+        TaskDto taskDto2 = new TaskDto("taskName2", "taskDesc2", taskStatusId2, userId2, List.of(labelId2));
+        TaskDto taskDto3 = new TaskDto("taskName3", "taskDesc3", taskStatusId2, userId1, List.of(labelId1, labelId2));
+
+        testUtils.addTaskUnderUser(taskDto1, defaultUser1);
+        testUtils.addTaskUnderUser(taskDto2, defaultUser2);
+        testUtils.addTaskUnderUser(taskDto3, defaultUser2);
+        assertEquals(taskRepository.count(), 3);
+
+        MockHttpServletRequestBuilder req1 = get(TASK_CONTROLLER_PATH + "?executorId=" + userId1);
+        String resAsString = testUtils.getPerfomAuthorizedResultAsString(req1, defaultUser1);
+        List<Task> tasks = fromJSON(resAsString, new TypeReference<List<Task>>() {});
+        assertEquals(tasks.size(), 2);
+
+        MockHttpServletRequestBuilder req2 = get(TASK_CONTROLLER_PATH + "?taskStatus=" + taskStatusId2 + "&labels=" + labelId1);
+        String resAsString2 = testUtils.getPerfomAuthorizedResultAsString(req2, defaultUser1);
+        List<Task> tasks2 = fromJSON(resAsString2, new TypeReference<List<Task>>() {});
+        assertEquals(tasks2.size(), 1);
+        assertEquals(tasks2.get(0).getName(), "taskName3");
+
+        MockHttpServletRequestBuilder req3 = get(TASK_CONTROLLER_PATH + "?authorId=" + (userId1 + userId2 + 1));
+        String resAsString3 = testUtils.getPerfomAuthorizedResultAsString(req3, defaultUser1);
+        List<Task> tasks3 = fromJSON(resAsString3, new TypeReference<List<Task>>() {});
+        assertEquals(tasks3.size(), 0);
+    }
+
     @Test
     void testUpdateTask() throws Exception {
         testUtils.addUser(defaultUser2);
@@ -161,13 +190,13 @@ public class TaskControllerIT {
         Long userId2 = userRepository.findAll().get(1).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
-        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, null, userId1, labelsIds);
+        TaskDto taskDto = testUtils.fillTaskDto(defaultTaskDto, taskStatusId, userId1, labelsIds);
 
         testUtils.addTaskUnderUser(taskDto, defaultUser1);
         Task task = taskRepository.findAll().get(0);
         Long id = task.getId();
         Long authorId = task.getAuthor().getId();
-        TaskDto taskDtoForUpdate = new TaskDto("taskNameUpdated", "taskDescUpdated", taskStatusId, null, userId2, labelsIds);
+        TaskDto taskDtoForUpdate = new TaskDto("taskNameUpdated", "taskDescUpdated", taskStatusId, userId2, labelsIds);
 
         MockHttpServletRequestBuilder req = put(TASK_CONTROLLER_PATH + ID_PATH_VAR, id)
                 .content(toJSON(taskDtoForUpdate))
@@ -194,7 +223,7 @@ public class TaskControllerIT {
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
-        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, null, userId, labelsIds);
+        TaskDto taskDto = testUtils.fillTaskDto(defaultTaskDto, taskStatusId, userId, labelsIds);
 
         testUtils.addTaskUnderUser(taskDto, defaultUser1);
         assertThat(taskRepository.count()).isEqualTo(1);

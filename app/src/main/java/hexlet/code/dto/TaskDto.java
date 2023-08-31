@@ -27,4 +27,17 @@ public class TaskDto {
     private Long executorId;
 
     private List<Long> labelIds;
+
+    public TaskDto(String name, String description, Long taskStatusId, Long executorId, List<Long> labels) {
+        this.name = name;
+        this.description = description;
+        this.taskStatusId = taskStatusId;
+        this.executorId = executorId;
+        this.labelIds = List.copyOf(labels);
+    }
+
+    public TaskDto(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

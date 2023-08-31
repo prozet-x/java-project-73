@@ -6,7 +6,6 @@ import hexlet.code.dto.LabelDto;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import hexlet.code.utils.TestUtils;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
 import java.util.List;
-
 import static hexlet.code.controller.LabelController.ID;
 import static hexlet.code.utils.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -91,11 +88,7 @@ public class LabelControllerIT {
         MockHttpServletRequestBuilder reqGood = get(LABEL_CONTROLLER_PATH + ID, id);
         testUtils.performWithoutToken(reqGood)
                 .andExpect(status().isForbidden());
-        String labelAsString = testUtils.performWithToken(reqGood, defaultUser1)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        String labelAsString = testUtils.getPerfomAuthorizedResultAsString(reqGood, defaultUser1);
         Label label = fromJSON(labelAsString, new TypeReference<Label>() {});
         assertEquals(label.getName(), defaultLabel.getName());
     }
@@ -110,11 +103,7 @@ public class LabelControllerIT {
         testUtils.performWithoutToken(req)
                 .andExpect(status().isForbidden());
 
-        String labelsAsString = testUtils.performWithToken(req, defaultUser1)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        String labelsAsString = testUtils.getPerfomAuthorizedResultAsString(req, defaultUser1);
         List<Label> labels = fromJSON(labelsAsString, new TypeReference<List<Label>>() {});
         assertEquals(labels.size(), 2);
     }

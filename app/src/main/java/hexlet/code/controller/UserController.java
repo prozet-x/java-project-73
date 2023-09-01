@@ -1,9 +1,17 @@
 package hexlet.code.controller;
 
 import hexlet.code.dto.UserDto;
+import hexlet.code.model.Label;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,31 +31,91 @@ public class UserController {
 
     private static final String ONLY_OWNER_BY_ID = "@userRepository.findById(#id).get().getEmail() == authentication.getName()";
 
+    @Operation(summary = "Get all users")
+    @ApiResponse(
+            responseCode = "200",
+            description = "All users got",
+            content = {
+                    @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = User.class)))
+            }
+    )
     @GetMapping
     public List<User> getAll() {
         return userRepository.findAll();
     }
 
+    @Operation(summary = "Get user by id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User got",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = User.class)
+                            )
+                    }
+            ),
+            @ApiResponse(responseCode = "404", description = "User with given id not found")
+    })
     @GetMapping(ID)
-    public User getById(@PathVariable final Long id) {
+    public User getById(@PathVariable @Parameter(description = "Id of user to get") final Long id) {
         return userRepository.findById(id).get();
     }
 
+    @Operation(summary = "Create new user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "New user created",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = User.class)
+                            )
+                    }
+            ),
+            @ApiResponse(responseCode = "422", description = "Bad input data")
+    })
     @PostMapping
     @ResponseStatus(CREATED)
-    public User registerNew(@RequestBody @Valid final UserDto userDto) {
+    public User registerNew(@RequestBody @Valid @Parameter(description = "User to create") final UserDto userDto) {
         return userService.createNew(userDto);
     }
 
+    @Operation(summary = "Update user by id")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User updated",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = User.class)
+                            )
+                    }
+            ),
+            @ApiResponse(responseCode = "404", description = "User with given id not found"),
+            @ApiResponse(responseCode = "422", description = "Bad input data")
+    })
     @PreAuthorize(ONLY_OWNER_BY_ID)
     @PutMapping(ID)
-    public User update(@RequestBody @Valid UserDto userDto, @PathVariable final Long id) {
+    public User update(
+            @RequestBody @Valid @Parameter(description = "New user data") UserDto userDto,
+            @PathVariable @Parameter(description = "Id of user to update") final Long id) {
         return userService.update(userDto, id);
     }
 
+    @Operation(summary = "Delete user by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User deleted"),
+            @ApiResponse(responseCode = "404", description = "User with given id not found")
+    })
     @DeleteMapping(ID)
     @PreAuthorize(ONLY_OWNER_BY_ID)
-    public void delete(@PathVariable final long id) {
+    public void delete(@PathVariable @Parameter(description = "Id of user to delete") final long id) {
         userService.deleteById(id);
     }
 }

@@ -1,11 +1,13 @@
 package hexlet.code.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Transient;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class TaskDto {
     @NotNull
     private Long taskStatusId;
 
+    @JsonIgnore
     private Long authorId;
 
     private Long executorId;

@@ -20,3 +20,7 @@ logging:
   level:
     root: info
     web: debug
+
+#springdoc:
+#  swagger-ui:
+#    path: "swagger-ui1.html"

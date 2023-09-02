@@ -1,5 +1,6 @@
 package hexlet.code.controller;
 
+import com.rollbar.notifier.Rollbar;
 import hexlet.code.dto.LabelDto;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
@@ -28,6 +29,7 @@ public class LabelController {
     public static final String ID = "/{id}";
     private LabelRepository labelRepository;
     private LabelService labelService;
+    private Rollbar rollbar;
 
     @Operation(summary = "Create new label")
     @ApiResponses(value = {

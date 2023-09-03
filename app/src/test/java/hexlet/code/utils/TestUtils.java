@@ -51,11 +51,19 @@ public class TestUtils {
     @Autowired
     private LabelRepository labelRepository;
 
-    public static final UserDto defaultUser1 = new UserDto("defFirstName1", "defLastName1", "def1@email.com", "defPassword1");
-    public static final UserDto defaultUser2 = new UserDto("defFirstName2", "defLastName2", "def2@email.com", "defPassword2");
-    public static final TaskStatusDto defaultTaskStatus1 = new TaskStatusDto("status1");
-    public static final TaskStatusDto defaultTaskStatus2 = new TaskStatusDto("status2");
-    public static final LabelDto defaultLabel = new LabelDto("defLabel");
+    public static final UserDto DEFAULT_USER_1 = new UserDto(
+            "defFirstName1",
+            "defLastName1",
+            "def1@email.com",
+            "defPassword1");
+    public static final UserDto DEFAULT_USER_2 = new UserDto(
+            "defFirstName2",
+            "defLastName2",
+            "def2@email.com",
+            "defPassword2");
+    public static final TaskStatusDto DEFAULT_TASK_STATUS_1 = new TaskStatusDto("status1");
+    public static final TaskStatusDto DEFAULT_TASK_STATUS_2 = new TaskStatusDto("status2");
+    public static final LabelDto DEFAULT_LABEL = new LabelDto("defLabel");
     public static final String TASK_DEFAULT_NAME = "defTaskName";
     public static final String TASK_DEFAULT_DESC = "defTaskDesc";
     public static TaskDto defaultTaskDto = new TaskDto(TASK_DEFAULT_NAME, TASK_DEFAULT_DESC);
@@ -106,7 +114,7 @@ public class TestUtils {
     }
 
     public TaskDto fillTaskDto(TaskDto taskDto, Long statusId, Long executorId, List<Long> labels) {
-        taskDto.setTaskStatusId(statusId);;
+        taskDto.setTaskStatusId(statusId);
         taskDto.setExecutorId(executorId);
         taskDto.setLabelIds(List.copyOf(labels));
         return taskDto;
@@ -137,7 +145,9 @@ public class TestUtils {
         return mapper.readValue(from, to);
     }
 
-    public String getPerfomAuthorizedResultAsString(MockHttpServletRequestBuilder req, UserDto userDto) throws Exception {
+    public String getPerfomAuthorizedResultAsString(
+            MockHttpServletRequestBuilder req,
+            UserDto userDto) throws Exception {
         return performWithToken(req, userDto)
                 .andExpect(status().isOk())
                 .andReturn()

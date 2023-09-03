@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @ControllerAdvice
 @ResponseBody
@@ -30,13 +31,13 @@ public class BaseExceptionHandler {
 
     @ResponseStatus(UNAUTHORIZED)
     @ExceptionHandler(UsernameNotFoundException.class)
-    public String UsernameNotFoundExceptionHandler(UsernameNotFoundException ex) {
+    public String usernameNotFoundExceptionHandler(UsernameNotFoundException ex) {
         return ex.getMessage();
     }
 
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public String DataIntegrityViolationExceptionHandler(DataIntegrityViolationException ex) {
+    public String dataIntegrityViolationExceptionHandler(DataIntegrityViolationException ex) {
         return ex.getMessage();
     }
 }

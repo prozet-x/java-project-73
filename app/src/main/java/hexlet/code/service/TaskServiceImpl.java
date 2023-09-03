@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @AllArgsConstructor
-public class TaskServiceImpl implements TaskService{
+public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
     private UserRepository userRepository;
     private TaskStatusRepository taskStatusRepository;

@@ -18,7 +18,10 @@ import hexlet.code.utils.TestUtils;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import java.util.List;
 import static hexlet.code.controller.LabelController.ID;
-import static hexlet.code.utils.TestUtils.*;
+import static hexlet.code.utils.TestUtils.toJSON;
+import static hexlet.code.utils.TestUtils.fromJSON;
+import static hexlet.code.utils.TestUtils.DEFAULT_USER_1;
+import static hexlet.code.utils.TestUtils.DEFAULT_LABEL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static hexlet.code.controller.LabelController.LABEL_CONTROLLER_PATH;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -47,7 +50,7 @@ public class LabelControllerIT {
 
     @Test
     public void testCreateNew() throws Exception {
-        assertEquals(labelRepository.count(),0);
+        assertEquals(labelRepository.count(), 0);
 
         Label newLabel = new Label("newLabel");
         MockHttpServletRequestBuilder req = post(LABEL_CONTROLLER_PATH)
@@ -58,12 +61,12 @@ public class LabelControllerIT {
 
         assertEquals(labelRepository.count(), 0);
 
-        String labelAsString = testUtils.performWithToken(req, defaultUser1)
+        String labelAsString = testUtils.performWithToken(req, DEFAULT_USER_1)
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        Label label = fromJSON(labelAsString, new TypeReference<Label>() {});
+        Label label = fromJSON(labelAsString, new TypeReference<Label>() { });
         assertEquals(label.getName(), newLabel.getName());
 
         assertEquals(labelRepository.count(), 1);
@@ -72,30 +75,30 @@ public class LabelControllerIT {
         MockHttpServletRequestBuilder reqBadName = post(LABEL_CONTROLLER_PATH)
                 .content(toJSON(labelDtoBadName))
                 .contentType(MediaType.APPLICATION_JSON);
-        testUtils.performWithToken(reqBadName, defaultUser1)
+        testUtils.performWithToken(reqBadName, DEFAULT_USER_1)
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     public void testGetById() throws Exception {
-        addLabel(defaultLabel);
+        addLabel(DEFAULT_LABEL);
         Long id = labelRepository.findAll().get(0).getId();
 
         MockHttpServletRequestBuilder reqBad = get(LABEL_CONTROLLER_PATH + ID, id + 1);
-        testUtils.performWithToken(reqBad, defaultUser1)
+        testUtils.performWithToken(reqBad, DEFAULT_USER_1)
                 .andExpect(status().isNotFound());
 
         MockHttpServletRequestBuilder reqGood = get(LABEL_CONTROLLER_PATH + ID, id);
         testUtils.performWithoutToken(reqGood)
                 .andExpect(status().isForbidden());
-        String labelAsString = testUtils.getPerfomAuthorizedResultAsString(reqGood, defaultUser1);
-        Label label = fromJSON(labelAsString, new TypeReference<Label>() {});
-        assertEquals(label.getName(), defaultLabel.getName());
+        String labelAsString = testUtils.getPerfomAuthorizedResultAsString(reqGood, DEFAULT_USER_1);
+        Label label = fromJSON(labelAsString, new TypeReference<Label>() { });
+        assertEquals(label.getName(), DEFAULT_LABEL.getName());
     }
 
     @Test
     public void testGetAll() throws Exception {
-        addLabel(defaultLabel);
+        addLabel(DEFAULT_LABEL);
         addLabel(new LabelDto("Label"));
         assertEquals(labelRepository.count(), 2);
 
@@ -103,14 +106,14 @@ public class LabelControllerIT {
         testUtils.performWithoutToken(req)
                 .andExpect(status().isForbidden());
 
-        String labelsAsString = testUtils.getPerfomAuthorizedResultAsString(req, defaultUser1);
-        List<Label> labels = fromJSON(labelsAsString, new TypeReference<List<Label>>() {});
+        String labelsAsString = testUtils.getPerfomAuthorizedResultAsString(req, DEFAULT_USER_1);
+        List<Label> labels = fromJSON(labelsAsString, new TypeReference<List<Label>>() { });
         assertEquals(labels.size(), 2);
     }
 
     @Test
     public void testUpdate() throws Exception {
-        addLabel(defaultLabel);
+        addLabel(DEFAULT_LABEL);
         Long id = labelRepository.findAll().get(0).getId();
 
         String newName = "newName";
@@ -118,7 +121,7 @@ public class LabelControllerIT {
         MockHttpServletRequestBuilder req = put(LABEL_CONTROLLER_PATH + ID, id)
                 .content(toJSON(labelDto))
                 .contentType(MediaType.APPLICATION_JSON);
-        testUtils.performWithToken(req, defaultUser1)
+        testUtils.performWithToken(req, DEFAULT_USER_1)
                 .andExpect(status().isOk());
         assertEquals(labelRepository.findAll().get(0).getName(), newName);
 
@@ -134,18 +137,18 @@ public class LabelControllerIT {
 
     @Test
     void testDelete() throws Exception {
-        addLabel(defaultLabel);
+        addLabel(DEFAULT_LABEL);
         assertEquals(labelRepository.count(), 1);
 
         Long id = labelRepository.findAll().get(0).getId();
         MockHttpServletRequestBuilder reqBad = delete(LABEL_CONTROLLER_PATH + ID, id + 1);
-        testUtils.performWithToken(reqBad, defaultUser1)
+        testUtils.performWithToken(reqBad, DEFAULT_USER_1)
                 .andExpect(status().isNotFound());
 
         MockHttpServletRequestBuilder reqGood = delete(LABEL_CONTROLLER_PATH + ID, id);
         testUtils.performWithoutToken(reqGood)
                 .andExpect(status().isForbidden());
-        testUtils.performWithToken(reqGood, defaultUser1)
+        testUtils.performWithToken(reqGood, DEFAULT_USER_1)
                 .andExpect(status().isOk());
 
         assertEquals(labelRepository.count(), 0);
@@ -155,6 +158,6 @@ public class LabelControllerIT {
         MockHttpServletRequestBuilder req = post(LABEL_CONTROLLER_PATH)
                 .content(toJSON(labelDto))
                 .contentType(MediaType.APPLICATION_JSON);
-        testUtils.performWithToken(req, defaultUser1);
+        testUtils.performWithToken(req, DEFAULT_USER_1);
     }
 }

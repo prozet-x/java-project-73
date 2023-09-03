@@ -20,11 +20,19 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import java.util.List;
 import static hexlet.code.config.SpringConfigForIT.TEST_PROFILE;
 import static hexlet.code.controller.TaskStatusController.STATUS_CONTROLLER_PATH;
-import static hexlet.code.utils.TestUtils.*;
+import static hexlet.code.utils.TestUtils.toJSON;
+import static hexlet.code.utils.TestUtils.fromJSON;
+import static hexlet.code.utils.TestUtils.DEFAULT_USER_1;
+import static hexlet.code.utils.TestUtils.DEFAULT_TASK_STATUS_1;
+import static hexlet.code.utils.TestUtils.ID_PATH_VAR;
+import static hexlet.code.utils.TestUtils.DEFAULT_TASK_STATUS_2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -40,7 +48,7 @@ public class TaskStatusControllerIT {
 
     @BeforeEach
     void beforeEach() throws Exception {
-        testUtils.addUser(defaultUser1);
+        testUtils.addUser(DEFAULT_USER_1);
     }
 
     @AfterEach
@@ -53,22 +61,22 @@ public class TaskStatusControllerIT {
         assertEquals(taskStatusRepository.count(), 0);
 
         MockHttpServletRequestBuilder req = post(STATUS_CONTROLLER_PATH)
-                .content(toJSON(defaultTaskStatus1))
+                .content(toJSON(DEFAULT_TASK_STATUS_1))
                 .contentType(MediaType.APPLICATION_JSON);
 
         testUtils.performWithoutToken(req).andExpect(status().isForbidden());
         assertEquals(taskStatusRepository.count(), 0);
 
-        testUtils.performWithToken(req, defaultUser1).andExpect(status().isCreated());
+        testUtils.performWithToken(req, DEFAULT_USER_1).andExpect(status().isCreated());
         assertEquals(taskStatusRepository.count(), 1);
 
         String nameOfSavedStatus = taskStatusRepository.findAll().get(0).getName();
-        assertEquals(nameOfSavedStatus, defaultTaskStatus1.getName());
+        assertEquals(nameOfSavedStatus, DEFAULT_TASK_STATUS_1.getName());
     }
 
     @Test
     void testTaskStatusDelete() throws Exception {
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
+        testUtils.addTaskStatusUnderUser(DEFAULT_TASK_STATUS_1, DEFAULT_USER_1);
         assertEquals(taskStatusRepository.count(), 1);
 
         Long id = taskStatusRepository.findAll().get(0).getId();
@@ -77,36 +85,36 @@ public class TaskStatusControllerIT {
         testUtils.performWithoutToken(reqDel).andExpect(status().isForbidden());
         assertEquals(taskStatusRepository.count(), 1);
 
-        testUtils.performWithToken(reqDel, defaultUser1).andExpect(status().isOk());
+        testUtils.performWithToken(reqDel, DEFAULT_USER_1).andExpect(status().isOk());
         assertEquals(taskStatusRepository.count(), 0);
     }
 
     @Test
     void testTaskStatusGet() throws Exception {
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
+        testUtils.addTaskStatusUnderUser(DEFAULT_TASK_STATUS_1, DEFAULT_USER_1);
 
         Long id = taskStatusRepository.findAll().get(0).getId();
         MockHttpServletRequestBuilder req = get(STATUS_CONTROLLER_PATH + ID_PATH_VAR, id);
 
         String respAsString = testUtils.getPerfomUnauthorizedResultAsString(req);
-        TaskStatus taskStatus = fromJSON(respAsString, new TypeReference<>(){});
-        assertEquals(taskStatus.getName(), defaultTaskStatus1.getName());
+        TaskStatus taskStatus = fromJSON(respAsString, new TypeReference<>() { });
+        assertEquals(taskStatus.getName(), DEFAULT_TASK_STATUS_1.getName());
     }
 
     @Test
     void testTaskStatusGetAll() throws Exception {
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus2, defaultUser1);
+        testUtils.addTaskStatusUnderUser(DEFAULT_TASK_STATUS_1, DEFAULT_USER_1);
+        testUtils.addTaskStatusUnderUser(DEFAULT_TASK_STATUS_2, DEFAULT_USER_1);
 
         MockHttpServletRequestBuilder req = get(STATUS_CONTROLLER_PATH);
         String respAsString = testUtils.getPerfomUnauthorizedResultAsString(req);
-        List<TaskStatus> list = fromJSON(respAsString, new TypeReference<>() {});
+        List<TaskStatus> list = fromJSON(respAsString, new TypeReference<>() { });
         assertThat(list).hasSize(2);
     }
 
     @Test
     void testTaskStatusUpdate() throws Exception {
-        testUtils.addTaskStatusUnderUser(defaultTaskStatus1, defaultUser1);
+        testUtils.addTaskStatusUnderUser(DEFAULT_TASK_STATUS_1, DEFAULT_USER_1);
 
         Long id = taskStatusRepository.findAll().get(0).getId();
         TaskStatusDto taskStatusNew = new TaskStatusDto("hello");
@@ -117,8 +125,8 @@ public class TaskStatusControllerIT {
 
         testUtils.performWithoutToken(req).andExpect(status().isForbidden());
 
-        String updatedTaskStatusAsString = testUtils.getPerfomAuthorizedResultAsString(req, defaultUser1);
-        TaskStatus updatedTaskStatus = fromJSON(updatedTaskStatusAsString, new TypeReference<>(){});
+        String updatedTaskStatusAsString = testUtils.getPerfomAuthorizedResultAsString(req, DEFAULT_USER_1);
+        TaskStatus updatedTaskStatus = fromJSON(updatedTaskStatusAsString, new TypeReference<>() { });
         assertThat(updatedTaskStatus.getName()).isEqualTo(taskStatusNew.getName());
     }
 }

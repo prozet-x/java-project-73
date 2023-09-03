@@ -28,6 +28,7 @@ public class RollbarConfig {
     private String activeProfile;
     /**
      * Register a Rollbar bean to configure App with Rollbar.
+     * @return Rollbar-object with given configuration
      */
     @Bean
     public Rollbar rollbar() {

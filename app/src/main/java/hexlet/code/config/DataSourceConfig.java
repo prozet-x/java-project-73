@@ -22,10 +22,10 @@ public class DataSourceConfig {
 
         String username = uri.getUserInfo().split(":")[0];
         String password = uri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:postgresql://" + uri.getHost() + ':' + uri.getPort() + uri.getPath();
+        String dbUrlJDBC = "jdbc:postgresql://" + uri.getHost() + ':' + uri.getPort() + uri.getPath();
 
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(dbUrl);
+        dataSource.setJdbcUrl(dbUrlJDBC);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 

@@ -1,7 +1,6 @@
 package hexlet.code.controller;
 
 import hexlet.code.dto.UserDto;
-import hexlet.code.model.Label;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.UserService;
@@ -14,7 +13,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import static org.springframework.http.HttpStatus.CREATED;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -29,7 +36,8 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    private static final String ONLY_OWNER_BY_ID = "@userRepository.findById(#id).get().getEmail() == authentication.getName()";
+    private static final String ONLY_OWNER_BY_ID =
+            "@userRepository.findById(#id).get().getEmail() == authentication.getName()";
 
     @Operation(summary = "Get all users")
     @ApiResponse(

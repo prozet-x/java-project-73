@@ -44,7 +44,7 @@ public class UserController {
             responseCode = "200",
             description = "All users got",
             content = {
-                    @Content(
+                @Content(
                             mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = User.class)))
             }
@@ -56,17 +56,17 @@ public class UserController {
 
     @Operation(summary = "Get user by id")
     @ApiResponses(value = {
-            @ApiResponse(
+        @ApiResponse(
                     responseCode = "200",
                     description = "User got",
                     content = {
-                            @Content(
+                        @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = User.class)
                             )
                     }
             ),
-            @ApiResponse(responseCode = "404", description = "User with given id not found")
+        @ApiResponse(responseCode = "404", description = "User with given id not found")
     })
     @GetMapping(ID)
     public User getById(@PathVariable @Parameter(description = "Id of user to get") final Long id) {
@@ -75,17 +75,17 @@ public class UserController {
 
     @Operation(summary = "Create new user")
     @ApiResponses(value = {
-            @ApiResponse(
+        @ApiResponse(
                     responseCode = "201",
                     description = "New user created",
                     content = {
-                            @Content(
+                        @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = User.class)
                             )
                     }
             ),
-            @ApiResponse(responseCode = "422", description = "Bad input data")
+        @ApiResponse(responseCode = "422", description = "Bad input data")
     })
     @PostMapping
     @ResponseStatus(CREATED)
@@ -95,18 +95,18 @@ public class UserController {
 
     @Operation(summary = "Update user by id")
     @ApiResponses(value = {
-            @ApiResponse(
+        @ApiResponse(
                     responseCode = "200",
                     description = "User updated",
                     content = {
-                            @Content(
+                        @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = User.class)
                             )
                     }
             ),
-            @ApiResponse(responseCode = "404", description = "User with given id not found"),
-            @ApiResponse(responseCode = "422", description = "Bad input data")
+        @ApiResponse(responseCode = "404", description = "User with given id not found"),
+        @ApiResponse(responseCode = "422", description = "Bad input data")
     })
     @PreAuthorize(ONLY_OWNER_BY_ID)
     @PutMapping(ID)
@@ -118,8 +118,8 @@ public class UserController {
 
     @Operation(summary = "Delete user by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User deleted"),
-            @ApiResponse(responseCode = "404", description = "User with given id not found")
+        @ApiResponse(responseCode = "200", description = "User deleted"),
+        @ApiResponse(responseCode = "404", description = "User with given id not found")
     })
     @DeleteMapping(ID)
     @PreAuthorize(ONLY_OWNER_BY_ID)

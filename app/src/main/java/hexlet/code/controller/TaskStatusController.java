@@ -42,7 +42,7 @@ public class TaskStatusController {
             responseCode = "200",
             description = "All task statuses got",
             content = {
-                    @Content(
+                @Content(
                             mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = TaskStatus.class)))
             }
@@ -54,17 +54,17 @@ public class TaskStatusController {
 
     @Operation(summary = "Get task status by id")
     @ApiResponses(value = {
-            @ApiResponse(
+        @ApiResponse(
                     responseCode = "200",
                     description = "Task status got",
                     content = {
-                            @Content(
+                        @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = TaskStatus.class)
                             )
                     }
             ),
-            @ApiResponse(responseCode = "404", description = "Task status with given id not found")
+        @ApiResponse(responseCode = "404", description = "Task status with given id not found")
     })
     @GetMapping(ID)
     public TaskStatus getById(@PathVariable @Parameter(description = "Id of task status to get") final long id) {
@@ -73,17 +73,17 @@ public class TaskStatusController {
 
     @Operation(summary = "Create new task status")
     @ApiResponses(value = {
-            @ApiResponse(
+        @ApiResponse(
                     responseCode = "201",
                     description = "New task status created",
                     content = {
-                            @Content(
+                        @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = TaskStatus.class)
                             )
                     }
             ),
-            @ApiResponse(responseCode = "422", description = "Bad input data")
+        @ApiResponse(responseCode = "422", description = "Bad input data")
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -96,18 +96,18 @@ public class TaskStatusController {
 
     @Operation(summary = "Update task status by id")
     @ApiResponses(value = {
-            @ApiResponse(
+        @ApiResponse(
                     responseCode = "200",
                     description = "Task status updated",
                     content = {
-                            @Content(
+                        @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = TaskStatus.class)
                             )
                     }
             ),
-            @ApiResponse(responseCode = "404", description = "Task status with given id not found"),
-            @ApiResponse(responseCode = "422", description = "Bad input data"),
+        @ApiResponse(responseCode = "404", description = "Task status with given id not found"),
+        @ApiResponse(responseCode = "422", description = "Bad input data"),
     })
     @PutMapping(ID)
     public TaskStatus update(
@@ -118,8 +118,8 @@ public class TaskStatusController {
 
     @Operation(summary = "Delete task status by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Task status deleted"),
-            @ApiResponse(responseCode = "404", description = "Task status with given id not found")
+        @ApiResponse(responseCode = "200", description = "Task status deleted"),
+        @ApiResponse(responseCode = "404", description = "Task status with given id not found")
     })
     @DeleteMapping(ID)
     public void delete(@PathVariable @Parameter(description = "Id of task status to delete") final long id) {

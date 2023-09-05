@@ -16,8 +16,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @ComponentScan({
 
 // UPDATE TO YOUR PROJECT PACKAGE
-        "hexlet.code.config",
-        "com.rollbar.spring"
+    "hexlet.code.config",
+    "com.rollbar.spring"
 
 })
 public class RollbarConfig {

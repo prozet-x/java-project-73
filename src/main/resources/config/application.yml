@@ -1,0 +1,21 @@
+server:
+  port: ${PORT:5001}
+
+base-url: /api
+
+spring:
+  application:
+    name: TaskTracker
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yml
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+springdoc:
+  swagger-ui:
+    path: "swagger-ui.html"

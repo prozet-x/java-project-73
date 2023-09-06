@@ -1,0 +1,2915 @@
+databaseChangeLog: []
+
+databaseChangeLog:
+- changeSet:
+    id: 1692199992425-1
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692199992425-2
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692199992425-3
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692199992425-4
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+
+databaseChangeLog:
+- changeSet:
+    id: 1692277732607-1
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692277732607-2
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692277732607-3
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692277732607-4
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692277732607-5
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692277732607-6
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692277732607-7
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692277732607-8
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692277732607-9
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1692277790182-1
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692277790182-2
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692277790182-3
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692277790182-4
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692277790182-5
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692277790182-6
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692277790182-7
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692277790182-8
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692277790182-9
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1692427623713-1
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692427623713-2
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692427623713-3
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692427623713-4
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692427623713-5
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692427623713-6
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692427623713-7
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692427623713-8
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692427623713-9
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1692427779667-1
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692427779667-2
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692427779667-3
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692427779667-4
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: author
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: executor
+            type: BIGINT
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692427779667-5
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692427779667-6
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+
+databaseChangeLog:
+- changeSet:
+    id: 1692533269365-1
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692533269365-2
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692533269365-3
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692533269365-4
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692533269365-5
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692533269365-6
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692533269365-7
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692533269365-8
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692533269365-9
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1692637418326-1
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692637418326-2
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692637418326-3
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692637418326-4
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692637418326-5
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692637418326-6
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692637418326-7
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692637418326-8
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692637418326-9
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1692816672556-1
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: label_seq
+        startValue: 1
+- changeSet:
+    id: 1692816672556-2
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692816672556-3
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692816672556-4
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692816672556-5
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: labelPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: label
+- changeSet:
+    id: 1692816672556-6
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692816672556-7
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: labels_id
+            type: BIGINT
+        tableName: task_label
+- changeSet:
+    id: 1692816672556-8
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692816672556-9
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692816672556-10
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: labels_id
+        baseTableName: task_label
+        constraintName: FK4mg0uemuv9ewcbttc0atbt5hs
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: label
+        validate: true
+- changeSet:
+    id: 1692816672556-11
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692816672556-12
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: task_label
+        constraintName: FKbp361h72empe2dgbbv3fc6n4n
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task
+        validate: true
+- changeSet:
+    id: 1692816672556-13
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692816672556-14
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1692816914145-1
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: label_seq
+        startValue: 1
+- changeSet:
+    id: 1692816914145-2
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692816914145-3
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692816914145-4
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692816914145-5
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: labelPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: label
+- changeSet:
+    id: 1692816914145-6
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692816914145-7
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: labels_id
+            type: BIGINT
+        tableName: task_label
+- changeSet:
+    id: 1692816914145-8
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692816914145-9
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692816914145-10
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: labels_id
+        baseTableName: task_label
+        constraintName: FK4mg0uemuv9ewcbttc0atbt5hs
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: label
+        validate: true
+- changeSet:
+    id: 1692816914145-11
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692816914145-12
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: task_label
+        constraintName: FKbp361h72empe2dgbbv3fc6n4n
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task
+        validate: true
+- changeSet:
+    id: 1692816914145-13
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692816914145-14
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1692971753606-1
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: label_seq
+        startValue: 1
+- changeSet:
+    id: 1692971753606-2
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692971753606-3
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692971753606-4
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692971753606-5
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: labelPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: label
+- changeSet:
+    id: 1692971753606-6
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692971753606-7
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: labels_id
+            type: BIGINT
+        tableName: task_label
+- changeSet:
+    id: 1692971753606-8
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692971753606-9
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692971753606-10
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: labels_id
+        baseTableName: task_label
+        constraintName: FK4mg0uemuv9ewcbttc0atbt5hs
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: label
+        validate: true
+- changeSet:
+    id: 1692971753606-11
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692971753606-12
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: task_label
+        constraintName: FKbp361h72empe2dgbbv3fc6n4n
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task
+        validate: true
+- changeSet:
+    id: 1692971753606-13
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692971753606-14
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1692972061589-1
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: label_seq
+        startValue: 1
+- changeSet:
+    id: 1692972061589-2
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692972061589-3
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692972061589-4
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692972061589-5
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: labelPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: label
+- changeSet:
+    id: 1692972061589-6
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692972061589-7
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: label_id
+            type: BIGINT
+        tableName: task_label
+- changeSet:
+    id: 1692972061589-8
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692972061589-9
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692972061589-10
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692972061589-11
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: task_label
+        constraintName: FKbp361h72empe2dgbbv3fc6n4n
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task
+        validate: true
+- changeSet:
+    id: 1692972061589-12
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692972061589-13
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: label_id
+        baseTableName: task_label
+        constraintName: FKn6qyae58igryi4ky0li4cmdd6
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: label
+        validate: true
+- changeSet:
+    id: 1692972061589-14
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1692977018256-1
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: label_seq
+        startValue: 1
+- changeSet:
+    id: 1692977018256-2
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692977018256-3
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692977018256-4
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692977018256-5
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: labelPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: label
+- changeSet:
+    id: 1692977018256-6
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692977018256-7
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: labels_id
+            type: BIGINT
+        tableName: task_label
+- changeSet:
+    id: 1692977018256-8
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692977018256-9
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692977018256-10
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: labels_id
+        baseTableName: task_label
+        constraintName: FK4mg0uemuv9ewcbttc0atbt5hs
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: label
+        validate: true
+- changeSet:
+    id: 1692977018256-11
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692977018256-12
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: task_label
+        constraintName: FKbp361h72empe2dgbbv3fc6n4n
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task
+        validate: true
+- changeSet:
+    id: 1692977018256-13
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692977018256-14
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1692977271833-1
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: labels_seq
+        startValue: 1
+- changeSet:
+    id: 1692977271833-2
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1692977271833-3
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1692977271833-4
+    author: prozex (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1692977271833-5
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: labelsPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: labels
+- changeSet:
+    id: 1692977271833-6
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1692977271833-7
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: labels_id
+            type: BIGINT
+        tableName: task_labels
+- changeSet:
+    id: 1692977271833-8
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1692977271833-9
+    author: prozex (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1692977271833-10
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1692977271833-11
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: labels_id
+        baseTableName: task_labels
+        constraintName: FKdkh6frab4lj03hr8pe6oe6ohp
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: labels
+        validate: true
+- changeSet:
+    id: 1692977271833-12
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: status_id
+        baseTableName: task
+        constraintName: FKhbyh5kk1fpobspep796vg5psq
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1692977271833-13
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: task_labels
+        constraintName: FKia1qqvbp6d1xw3sod3xw1xpye
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task
+        validate: true
+- changeSet:
+    id: 1692977271833-14
+    author: prozex (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1693146935058-1
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: labels_seq
+        startValue: 1
+- changeSet:
+    id: 1693146935058-2
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1693146935058-3
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1693146935058-4
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1693146935058-5
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: labelsPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: labels
+- changeSet:
+    id: 1693146935058-6
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: descr
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: task_status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1693146935058-7
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: labels_id
+            type: BIGINT
+        tableName: task_labels
+- changeSet:
+    id: 1693146935058-8
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1693146935058-9
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1693146935058-10
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_status_id
+        baseTableName: task
+        constraintName: FK39t114vuu54mh3wqt50wc2vq4
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1693146935058-11
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1693146935058-12
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: labels_id
+        baseTableName: task_labels
+        constraintName: FKdkh6frab4lj03hr8pe6oe6ohp
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: labels
+        validate: true
+- changeSet:
+    id: 1693146935058-13
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: task_labels
+        constraintName: FKia1qqvbp6d1xw3sod3xw1xpye
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task
+        validate: true
+- changeSet:
+    id: 1693146935058-14
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1693159399460-1
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: labels_seq
+        startValue: 1
+- changeSet:
+    id: 1693159399460-2
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1693159399460-3
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1693159399460-4
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1693159399460-5
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: labelsPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: labels
+- changeSet:
+    id: 1693159399460-6
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: task_status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1693159399460-7
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: labels_id
+            type: BIGINT
+        tableName: task_labels
+- changeSet:
+    id: 1693159399460-8
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1693159399460-9
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1693159399460-10
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_status_id
+        baseTableName: task
+        constraintName: FK39t114vuu54mh3wqt50wc2vq4
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1693159399460-11
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1693159399460-12
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: labels_id
+        baseTableName: task_labels
+        constraintName: FKdkh6frab4lj03hr8pe6oe6ohp
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: labels
+        validate: true
+- changeSet:
+    id: 1693159399460-13
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: task_labels
+        constraintName: FKia1qqvbp6d1xw3sod3xw1xpye
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task
+        validate: true
+- changeSet:
+    id: 1693159399460-14
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+databaseChangeLog:
+- changeSet:
+    id: 1693159405635-1
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: labels_seq
+        startValue: 1
+- changeSet:
+    id: 1693159405635-2
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_seq
+        startValue: 1
+- changeSet:
+    id: 1693159405635-3
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: task_status_seq
+        startValue: 1
+- changeSet:
+    id: 1693159405635-4
+    author: dima (generated)
+    changes:
+    - createSequence:
+        incrementBy: 50
+        sequenceName: users_seq
+        startValue: 1
+- changeSet:
+    id: 1693159405635-5
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: labelsPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: labels
+- changeSet:
+    id: 1693159405635-6
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: taskPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            name: author_id
+            type: BIGINT
+        - column:
+            name: executor_id
+            type: BIGINT
+        - column:
+            name: task_status_id
+            type: BIGINT
+        tableName: task
+- changeSet:
+    id: 1693159405635-7
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: task_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: labels_id
+            type: BIGINT
+        tableName: task_labels
+- changeSet:
+    id: 1693159405635-8
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: task_statusPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: task_status
+- changeSet:
+    id: 1693159405635-9
+    author: dima (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: created_at
+            type: TIMESTAMP(6)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1693159405635-10
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_status_id
+        baseTableName: task
+        constraintName: FK39t114vuu54mh3wqt50wc2vq4
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task_status
+        validate: true
+- changeSet:
+    id: 1693159405635-11
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: executor_id
+        baseTableName: task
+        constraintName: FK60p5enwpfg7w3pnor96m0t931
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1693159405635-12
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: labels_id
+        baseTableName: task_labels
+        constraintName: FKdkh6frab4lj03hr8pe6oe6ohp
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: labels
+        validate: true
+- changeSet:
+    id: 1693159405635-13
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: task_id
+        baseTableName: task_labels
+        constraintName: FKia1qqvbp6d1xw3sod3xw1xpye
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: task
+        validate: true
+- changeSet:
+    id: 1693159405635-14
+    author: dima (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: author_id
+        baseTableName: task
+        constraintName: FKnu4tbtolc8avjgstax6sk0woe
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+

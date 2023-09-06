@@ -18,7 +18,7 @@ java {
 }
 
 application {
-	mainClass = 'hexlet.code.Application'
+	mainClass = 'hexlet.code.AppApplication'
 }
 
 jacocoTestReport {
@@ -35,7 +35,7 @@ repositories {
 
 jar {
     manifest {
-        attributes "Main-Class": "hexlet.code.Application"
+        attributes "Main-Class": "hexlet.code.AppApplication"
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from {

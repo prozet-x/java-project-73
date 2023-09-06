@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Component
 public class TestUtils {
     public static final String ID_PATH_VAR = "/{id}";
-    private final static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Autowired
     private JWTHelper jwtHelper;
@@ -142,11 +142,11 @@ public class TestUtils {
     }
 
     public static String toJSON(Object obj) throws JsonProcessingException {
-        return mapper.writeValueAsString(obj);
+        return MAPPER.writeValueAsString(obj);
     }
 
     public static <T> T fromJSON(String from, TypeReference<T> to) throws JsonProcessingException {
-        return mapper.readValue(from, to);
+        return MAPPER.readValue(from, to);
     }
 
     public String getPerfomAuthorizedResultAsString(

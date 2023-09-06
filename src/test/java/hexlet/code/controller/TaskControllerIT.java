@@ -39,7 +39,6 @@ import static hexlet.code.utils.TestUtils.DEFAULT_USER_1;
 import static hexlet.code.utils.TestUtils.DEFAULT_USER_2;
 import static hexlet.code.utils.TestUtils.DEFAULT_LABEL;
 import static hexlet.code.utils.TestUtils.DEFAULT_TASK_STATUS_1;
-import static hexlet.code.utils.TestUtils.defaultTaskDto;
 import static hexlet.code.utils.TestUtils.ID_PATH_VAR;
 import static hexlet.code.utils.TestUtils.toJSON;
 import static hexlet.code.utils.TestUtils.fromJSON;
@@ -83,7 +82,7 @@ public class TaskControllerIT {
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
-        TaskDto taskDto = testUtils.fillTaskDto(defaultTaskDto, taskStatusId, userId, labelsIds);
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, labelsIds);
 
         assertEquals(taskRepository.count(), 0);
 
@@ -112,7 +111,7 @@ public class TaskControllerIT {
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
-        TaskDto taskDto = testUtils.fillTaskDto(defaultTaskDto, taskStatusId, userId, labelsIds);
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, labelsIds);
         testUtils.addTaskUnderUser(taskDto, DEFAULT_USER_1);
         Long id = taskRepository.findAll().get(0).getId();
 
@@ -136,7 +135,7 @@ public class TaskControllerIT {
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
 
-        TaskDto taskDto1 = testUtils.fillTaskDto(defaultTaskDto, taskStatusId, userId2, labelsIds);
+        TaskDto taskDto1 = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId2, labelsIds);
         TaskDto taskDto2 = new TaskDto("taskName2", "taskDesc2", taskStatusId, userId1, labelsIds);
 
         testUtils.addTaskUnderUser(taskDto1, DEFAULT_USER_1);
@@ -210,7 +209,7 @@ public class TaskControllerIT {
         Long userId2 = userRepository.findAll().get(1).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
-        TaskDto taskDto = testUtils.fillTaskDto(defaultTaskDto, taskStatusId, userId1, labelsIds);
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId1, labelsIds);
 
         testUtils.addTaskUnderUser(taskDto, DEFAULT_USER_1);
         Task task = taskRepository.findAll().get(0);
@@ -243,7 +242,7 @@ public class TaskControllerIT {
         Long userId = userRepository.findAll().get(0).getId();
         Long taskStatusId = taskStatusRepository.findAll().get(0).getId();
         List<Long> labelsIds = List.of(labelRepository.findAll().get(0).getId());
-        TaskDto taskDto = testUtils.fillTaskDto(defaultTaskDto, taskStatusId, userId, labelsIds);
+        TaskDto taskDto = testUtils.fillTaskDto(testUtils.getDefaultTaskDto(), taskStatusId, userId, labelsIds);
 
         testUtils.addTaskUnderUser(taskDto, DEFAULT_USER_1);
         assertThat(taskRepository.count()).isEqualTo(1);

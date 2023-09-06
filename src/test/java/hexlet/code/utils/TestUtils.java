@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Component
 public class TestUtils {
     public static final String ID_PATH_VAR = "/{id}";
-    public static ObjectMapper mapper = new ObjectMapper();
+    private final static ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     private JWTHelper jwtHelper;
@@ -66,8 +66,12 @@ public class TestUtils {
     public static final LabelDto DEFAULT_LABEL = new LabelDto("defLabel");
     public static final String TASK_DEFAULT_NAME = "defTaskName";
     public static final String TASK_DEFAULT_DESC = "defTaskDesc";
-    public static TaskDto defaultTaskDto = new TaskDto(TASK_DEFAULT_NAME, TASK_DEFAULT_DESC);
+    private static TaskDto defaultTaskDto = new TaskDto(TASK_DEFAULT_NAME, TASK_DEFAULT_DESC);
     public static final String SPRING_USER_USERNAME = "username";
+
+    public TaskDto getDefaultTaskDto() {
+        return defaultTaskDto;
+    }
 
     public ResultActions addUser(UserDto userDto) throws Exception {
         String userDtoAsJSONString = toJSON(userDto);
